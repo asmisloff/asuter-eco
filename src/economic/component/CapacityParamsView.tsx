@@ -1,18 +1,19 @@
-import { CSSProperties } from "react";
-import { StringState } from "../../common/StringStateHandler";
-import { Status } from "../../common/verifiable";
-import { useAppDispatch } from "../../store";
-import { CapacityParamsState } from "../model/capacity-params";
-import { EconomicStateHandler } from "../model/economic";
-import economicSlice from "../slice";
-import "./style.css";
+import { CSSProperties } from 'react';
+import React from 'react';
+import { StringState } from '../../common/StringStateHandler';
+import { Status } from '../../common/verifiable';
+import { useAppDispatch } from '../../store';
+import { CapacityParamsState } from '../model/capacity-params';
+import { EconomicStateHandler } from '../model/economic';
+import economicSlice from '../slice';
+import './style.css';
 
 export function getStyle(status: Status): CSSProperties {
-  let color = "";
+  let color = '';
   if (status === Status.Error) {
-    color = "pink";
+    color = 'pink';
   } else if (status === Status.Warning) {
-    color = "lightyellow";
+    color = 'lightyellow';
   }
   return {
     backgroundColor: color
@@ -33,8 +34,8 @@ const CapacityEntryView = (props: {
         type="text"
         defaultValue={props.state.value}
         style={getStyle(props.state.status)}
-        className={"warning"}
-        title={props.state.what?.join("\n") ?? ""}
+        className={'warning'}
+        title={props.state.what?.join('\n') ?? ''}
         placeholder={props.placeholder}
         onBlur={(e) => props.onBlur(e.target.value)}
       />
@@ -81,9 +82,9 @@ export const CapacityParamsView = (props: {
       />
       <CapacityEntryView
         state={maxTrainMass}
-        label={"Масса"}
+        label={'Масса'}
         placeholder={
-          h.capacityHandler.defaultMass(props.capacity)?.toString() ?? ""
+          h.capacityHandler.defaultMass(props.capacity)?.toString() ?? ''
         }
         onBlur={(v) =>
           dispatch(
@@ -93,7 +94,8 @@ export const CapacityParamsView = (props: {
       />
       <CapacityEntryView
         state={oldInterval}
-        label={"Старый интервал"}
+        label={'Старый интервал'}
+        placeholder={props.capacity.oldCapacityInfo?.interval?.toString() ?? ''}
         onBlur={(v) =>
           dispatch(
             economicSlice.actions.update_capacityParams({ oldInterval: v })
@@ -102,7 +104,8 @@ export const CapacityParamsView = (props: {
       />
       <CapacityEntryView
         state={newInterval}
-        label={"Новый интервал"}
+        label={'Новый интервал'}
+        placeholder={props.capacity.newCapacityInfo?.interval?.toString() ?? ''}
         onBlur={(v) =>
           dispatch(
             economicSlice.actions.update_capacityParams({ newInterval: v })
@@ -111,7 +114,8 @@ export const CapacityParamsView = (props: {
       />
       <CapacityEntryView
         state={oldTrainQty}
-        label={"Старое количество"}
+        label={'Старое количество'}
+        placeholder={props.capacity.oldCapacityInfo?.trainQty?.toString() ?? ''}
         onBlur={(v) =>
           dispatch(
             economicSlice.actions.update_capacityParams({ oldTrainQty: v })
@@ -120,7 +124,8 @@ export const CapacityParamsView = (props: {
       />
       <CapacityEntryView
         state={newTrainQty}
-        label={"Новое количество"}
+        label={'Новое количество'}
+        placeholder={props.capacity.newCapacityInfo?.trainQty?.toString() ?? ''}
         onBlur={(v) =>
           dispatch(
             economicSlice.actions.update_capacityParams({ newTrainQty: v })

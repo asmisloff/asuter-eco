@@ -2,8 +2,8 @@ import {
   StringState,
   StringStateHandler,
   isBlank
-} from ".././StringStateHandler";
-import { Status } from ".././verifiable";
+} from '.././StringStateHandler';
+import { Status } from '.././verifiable';
 
 export class IntStringStateHandler extends StringStateHandler<number> {
   private minValue: number;
@@ -16,7 +16,7 @@ export class IntStringStateHandler extends StringStateHandler<number> {
       minValue < Number.MIN_SAFE_INTEGER ||
       maxValue > Number.MAX_SAFE_INTEGER
     ) {
-      throw new Error("Недопустимые предельные значения целого числа");
+      throw new Error('Недопустимые предельные значения целого числа');
     }
     this.minValue = minValue;
     this.maxValue = maxValue;

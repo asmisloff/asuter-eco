@@ -53,7 +53,7 @@ export abstract class StateHandler<S extends Verifiable, D> {
     if (tgt.what == null) {
       tgt.what = [];
     }
-    if (typeof e === "string" && tgt.what!.find((it) => it === e) == null) {
+    if (typeof e === 'string' && tgt.what!.find((it) => it === e) == null) {
       tgt.what.push(e);
     } else {
       for (const s of e as string[]) {
@@ -74,7 +74,7 @@ export abstract class StateHandler<S extends Verifiable, D> {
     if (tgt.what == null) {
       tgt.what = [];
     }
-    if (typeof w === "string" && tgt.what!.find((it) => it === w) == null) {
+    if (typeof w === 'string' && tgt.what!.find((it) => it === w) == null) {
       tgt.what.push(w);
     } else {
       for (const s of w as string[]) {

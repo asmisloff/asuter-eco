@@ -1,5 +1,5 @@
 {
-  "name": "redux-toolkit-typescript-counter",
+  "name": "asuter-eco",
   "version": "1.0.0",
   "description": "",
   "keywords": [],
@@ -9,13 +9,17 @@
     "@types/react-redux": "7.1.23",
     "react": "17.0.2",
     "react-dom": "17.0.2",
-    "react-redux": "7.2.6",
+    "react-redux": "^7.2.9",
     "react-scripts": "4.0.3"
   },
   "devDependencies": {
+    "@babel/eslint-parser": "^7.22.9",
     "@types/react": "17.0.20",
     "@types/react-dom": "17.0.9",
-    "typescript": "4.4.2"
+    "add": "^2.0.6",
+    "or": "^0.2.0",
+    "typescript": "4.4.2",
+    "yarn": "^1.22.19"
   },
   "scripts": {
     "start": "react-scripts start",

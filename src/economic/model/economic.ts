@@ -1,11 +1,6 @@
-import { isAsyncThunkAction } from "@reduxjs/toolkit";
-import { StateHandler, Status, Verifiable } from "../../common/verifiable";
-import {
-  CapacityParamsDto,
-  CapacityParamsState,
-  CapacityParamsStateHandler,
-  CapacityParamsStateHandlerKwArgs
-} from "./capacity-params";
+import { CapacityParamsStateHandler } from 'economic/handler/CapacityParamsStateHandler';
+import { StateHandler, Status, Verifiable } from '../../common/verifiable';
+import { CapacityParamsDto, CapacityParamsState, CapacityParamsStateHandlerKwArgs } from './capacity-params';
 
 interface EconomicDto {
   capacity: CapacityParamsDto;
@@ -15,10 +10,8 @@ interface EconomicState extends Verifiable {
   capacity: CapacityParamsState;
 }
 
-export class EconomicStateHandler extends StateHandler<
-  EconomicState,
-  EconomicDto
-> {
+export class EconomicStateHandler extends StateHandler<EconomicState, EconomicDto> {
+
   readonly capacityHandler = new CapacityParamsStateHandler();
 
   private constructor() {
@@ -34,15 +27,15 @@ export class EconomicStateHandler extends StateHandler<
   }
 
   fromDto(dto: EconomicDto): EconomicState {
-    throw new Error("Method not implemented.");
+    throw new Error('Method not implemented.');
   }
 
   toDto(state: EconomicState): EconomicDto {
-    throw new Error("Method not implemented.");
+    throw new Error('Method not implemented.');
   }
 
   validate(tgt: EconomicState): Status {
-    throw new Error("Method not implemented.");
+    throw new Error('Method not implemented.');
   }
 
   createDefault(): EconomicState {

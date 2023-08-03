@@ -1,4 +1,4 @@
-import { StateHandler, Status, Verifiable } from "./verifiable";
+import { StateHandler, Status, Verifiable } from './verifiable';
 
 /** Верефицируемое строковое состояние. */
 export interface StringState extends Verifiable {
@@ -12,10 +12,8 @@ export function isBlank(s: string): boolean {
 /**
  * Определяет интерфейс и общую логику для управления верифицируемым строковым состоянием.
  */
-export abstract class StringStateHandler<D> extends StateHandler<
-  StringState,
-  D
-> {
+export abstract class StringStateHandler<D> extends StateHandler<StringState, D> {
+
   fromDto(dto: D): StringState {
     return this.create(`${dto}`);
   }
@@ -38,7 +36,7 @@ export abstract class StringStateHandler<D> extends StateHandler<
   create(value?: string): StringState {
     const instance = {
       handle: this.cnt++,
-      value: value?.trim() ?? "",
+      value: value?.trim() ?? '',
       status: Status.Ok
     } as StringState;
     return instance;
@@ -48,10 +46,10 @@ export abstract class StringStateHandler<D> extends StateHandler<
 
   /** Проверить, приводится ли хранимое значение к действительному числу. */
   checkIsNumber(tgt: StringState): number {
-    const stringValue = tgt.value;
+    const stringValue = tgt.value.replace(',', '.').replace(/\s/g, '');
     const numberValue = isBlank(stringValue) ? NaN : +stringValue;
-    if (isNaN(numberValue) || stringValue === "") {
-      this.addError(tgt, "Значение должно быть числом");
+    if (isNaN(numberValue) || stringValue === '') {
+      this.addError(tgt, 'Значение должно быть числом');
     }
     return numberValue;
   }
@@ -61,7 +59,7 @@ export abstract class StringStateHandler<D> extends StateHandler<
     const stringValue = tgt.value;
     const numberValue = +stringValue;
     if (isNaN(numberValue)) {
-      this.addError(tgt, "Значение должно быть числом");
+      this.addError(tgt, 'Значение должно быть числом');
     }
     return numberValue;
   }
@@ -69,7 +67,7 @@ export abstract class StringStateHandler<D> extends StateHandler<
   checkIsNotBlank(tgt: StringState): boolean {
     const blank = isBlank(tgt.value);
     if (blank) {
-      this.addError(tgt, "Необходимо ввести значение");
+      this.addError(tgt, 'Необходимо ввести значение');
     }
     return !blank;
   }
@@ -87,10 +85,10 @@ export abstract class StringStateHandler<D> extends StateHandler<
     min: number,
     max: number
   ) {
-    const numberValue = typeof value === "number" ? value : +value;
+    const numberValue = typeof value === 'number' ? value : +value;
     return this.check(
       tgt,
-      numberValue >= min && value <= max,
+      numberValue >= min && numberValue <= max,
       Status.Error,
       `Диапазон допустимых значений: ${min}...${max}`
     );
@@ -102,12 +100,12 @@ export abstract class StringStateHandler<D> extends StateHandler<
    * @param value хранимое значение или число, к которому оно приводится.
    */
   checkIsInteger(tgt: StringState, value: number | string) {
-    const numberValue = typeof value === "number" ? value : +value;
+    const numberValue = typeof value === 'number' ? value : +value;
     return this.check(
       tgt,
       Number.isInteger(numberValue),
       Status.Error,
-      "Значение должно быть целым числом"
+      'Значение должно быть целым числом'
     );
   }
 }
