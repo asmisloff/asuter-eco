@@ -1,13 +1,13 @@
 import { isBlank } from 'common/StringStateHandler';
 import { FloatStringStateHandler } from 'common/number-state-handler/FloatStringStateHandler';
 import { StateHandler, Status, Verifiable } from 'common/verifiable';
+import { DEFAULT_AND_ACTUAL_VALUES_DONT_MATCH } from 'economic/const';
 import { CapacityParamsDto, CapacityParamsState, CapacityParamsStateHandlerKwArgs } from 'economic/model/capacity-params';
 
 export class CapacityParamsStateHandler extends StateHandler<CapacityParamsState, CapacityParamsDto> {
   private massHandler = new FloatStringStateHandler(0, 10000, 3, false);
   private intervalHandler = new FloatStringStateHandler(0, 40, 1, false);
   private trainQtyHandler = new FloatStringStateHandler(0, 10000, 1, false);
-  private readonly DEFAULT_AND_ACTUAL_VALUES_DONT_MATCH = 'Введенное значение не совпадает с интервалом из результатов расчета'
 
   fromDto(dto: CapacityParamsDto): CapacityParamsState {
     return this.create(dto);
@@ -29,11 +29,11 @@ export class CapacityParamsStateHandler extends StateHandler<CapacityParamsState
       this.intervalHandler.checkIsNotBlank(tgt.oldInterval);
       this.trainQtyHandler.checkIsNotBlank(tgt.oldTrainQty);
     } else {
-      if (!isBlank(tgt.oldInterval.value) && tgt.oldCapacityInfo.interval !== +tgt.oldInterval.value) {
-        this.intervalHandler.addWarning(tgt.oldInterval, this.DEFAULT_AND_ACTUAL_VALUES_DONT_MATCH);
+      if (tgt.oldInterval.value !== '' && !this.intervalHandler.equals(tgt.oldInterval, tgt.oldCapacityInfo.interval)) {
+        this.intervalHandler.addWarning(tgt.oldInterval, DEFAULT_AND_ACTUAL_VALUES_DONT_MATCH);
       }
-      if (!isBlank(tgt.oldTrainQty.value) && tgt.oldCapacityInfo.trainQty !== +tgt.oldTrainQty.value) {
-        this.trainQtyHandler.addWarning(tgt.oldTrainQty, this.DEFAULT_AND_ACTUAL_VALUES_DONT_MATCH)
+      if (tgt.oldTrainQty.value !== '' && !this.trainQtyHandler.equals(tgt.oldTrainQty, tgt.oldCapacityInfo.trainQty)) {
+        this.trainQtyHandler.addWarning(tgt.oldTrainQty, DEFAULT_AND_ACTUAL_VALUES_DONT_MATCH)
       }
     }
 
@@ -41,11 +41,11 @@ export class CapacityParamsStateHandler extends StateHandler<CapacityParamsState
       this.intervalHandler.checkIsNotBlank(tgt.newInterval);
       this.trainQtyHandler.checkIsNotBlank(tgt.newTrainQty);
     } else {
-      if (!isBlank(tgt.newInterval.value) && tgt.newCapacityInfo.interval !== +tgt.newInterval.value) {
-        this.intervalHandler.addWarning(tgt.newInterval, this.DEFAULT_AND_ACTUAL_VALUES_DONT_MATCH)
+      if (tgt.newInterval.value !== '' && !this.intervalHandler.equals(tgt.newInterval, tgt.newCapacityInfo.interval)) {
+        this.intervalHandler.addWarning(tgt.newInterval, DEFAULT_AND_ACTUAL_VALUES_DONT_MATCH);
       }
-      if (!isBlank(tgt.newTrainQty.value) && tgt.newCapacityInfo.trainQty !== +tgt.newTrainQty.value) {
-        this.trainQtyHandler.addWarning(tgt.newTrainQty, this.DEFAULT_AND_ACTUAL_VALUES_DONT_MATCH)
+      if (!this.trainQtyHandler.equals(tgt.newTrainQty, tgt.newCapacityInfo.trainQty)) {
+        this.trainQtyHandler.addWarning(tgt.newTrainQty, DEFAULT_AND_ACTUAL_VALUES_DONT_MATCH)
       }
     }
 

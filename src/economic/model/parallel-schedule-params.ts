@@ -1,15 +1,8 @@
 import { StringState } from 'common/StringStateHandler'
 import { Verifiable } from 'common/verifiable'
 
-interface ParallelScheduleInfo {
-    id: number
-    name: string
-    consumption: number
-    duration: number
-}
-
 export interface ParallelScheduleParamsState extends Verifiable {
-    oldComputaion: ParallelScheduleInfo | null
+    oldComputation: ParallelScheduleInfo | null
     newComputation: ParallelScheduleInfo | null
     oldDailyConsumption: StringState
     newDailyConsumption: StringState
@@ -27,4 +20,11 @@ export interface ParallelScheduleParamsKwArgs {
     newComputation?: ParallelScheduleInfo
     oldDailyConsumption?: number
     newDailyConsumption?: number
+}
+
+interface ParallelScheduleInfo {
+    id: number
+    name: string
+    consumption: number
+    duration: number
 }

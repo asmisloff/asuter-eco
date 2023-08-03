@@ -42,6 +42,10 @@ export abstract class StringStateHandler<D> extends StateHandler<StringState, D>
     return instance;
   }
 
+  update(tgt: StringState, newValue: string) {
+    tgt.value = newValue.trim()
+  }
+
   abstract validate(tgt: StringState): Status;
 
   /** Проверить, приводится ли хранимое значение к действительному числу. */

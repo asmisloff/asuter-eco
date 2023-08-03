@@ -45,6 +45,15 @@ export class FloatStringStateHandler extends StringStateHandler<number> {
     return tgt.status
   }
 
+  equals(tgt: StringState, value: number): boolean {
+    return this.format(value, this.precision) === tgt.value
+  }
+
+  private parse(s: string): number {
+    s = s.replace(',', '.').replace(/\s/g, '')
+    return +s
+  }
+
   private format(v: number, maxFractionDigits?: number, minFractionDigits?: number): string {
     const options = { maximumFractionDigits: maxFractionDigits, minimumFractionDigits: minFractionDigits }
     return (+v).toLocaleString('ru', options)
