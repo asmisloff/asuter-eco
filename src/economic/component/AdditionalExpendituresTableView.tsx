@@ -1,12 +1,14 @@
 import React from 'react';
-import { StringStateInput } from './CapacityParamsView';
+import { StringStateInput, getStyle } from './CapacityParamsView';
 import economicSlice from 'economic/slice';
 import { useAppDispatch } from 'store';
 import { AdditionalExpendituresTableState } from 'economic/model/additional-expendures';
 import { CapitalExpendituresRowState, CapitalExpendituresTableState } from 'economic/model/capital-expenditures';
+import { EconomicStateHandler } from 'economic/handler/ActionsEffectivenessStateHandler';
 
 export const AdditionalExpendituresTableView = (props: { tbl: AdditionalExpendituresTableState, capitalTbl: CapitalExpendituresTableState }) => {
     const dispatch = useAppDispatch()
+    const h = EconomicStateHandler.getInstance()
     return (
         <div>
             <h2>Капитальные затраты</h2>
@@ -28,16 +30,21 @@ export const AdditionalExpendituresTableView = (props: { tbl: AdditionalExpendit
                     {props.tbl.rows.map((row, idx) => {
                         return (
                             <tr key={row.handle}>
-                                {/* <td>
+                                <td>
                                     <StringStateInput
                                         state={row.expendureItem}
                                         placeholder={''}
-                                        onBlur={v => dispatch(economicSlice.actions.updateAdditionalExpendituresRow({ idx: idx, equipment: v }))}
+                                        onBlur={v => dispatch(economicSlice.actions.updateAdditionalExpendituresRow({ idx: idx, expendureItem: v }))}
                                     />
-                                </td> */}
+                                </td>
                                 <td>
-                                    <select value={row.equipment} onChange={v => dispatch(economicSlice.actions.updateAdditionalExpendituresRow({ idx, equipment: v.target.value }))}>
-                                        {uniqueEquipmentNames(row.equipment, props.capitalTbl.rows).map((name, i) => {
+                                    <select
+                                        value={row.equipment.value}
+                                        onChange={v => dispatch(economicSlice.actions.updateAdditionalExpendituresRow({ idx, equipment: v.target.value }))}
+                                        style={getStyle(row.equipment.status)}
+                                        title={row.equipment.what?.join('\n') ?? ''}
+                                    >
+                                        {h.uniqueEquipmentNames(row.equipment.value, props.capitalTbl.rows).map((name, i) => {
                                             return (
                                                 <option key={name} value={name}>{name}</option>
                                             )
@@ -45,28 +52,30 @@ export const AdditionalExpendituresTableView = (props: { tbl: AdditionalExpendit
                                     </select>
                                 </td>
                                 <td>
-                                    {/* <StringStateInput
+                                    <StringStateInput
                                         state={row.price}
                                         placeholder={''}
                                         onBlur={v => dispatch(economicSlice.actions.updateAdditionalExpendituresRow({ idx: idx, price: v }))}
-                                    /> */}
+                                    />
                                 </td>
                                 <td>
-                                    {/* <StringStateInput
+                                    <StringStateInput
                                         state={row.qty}
                                         placeholder={''}
                                         onBlur={v => dispatch(economicSlice.actions.updateAdditionalExpendituresRow({ idx: idx, qty: v }))}
-                                    /> */}
+                                    />
                                 </td>
                                 <td>
-                                    {/* <StringStateInput
-                                        state={row.serviceLife}
-                                        placeholder={''}
-                                        onBlur={v => dispatch(economicSlice.actions.updateAdditionalExpendituresRow({ idx: idx, serviceLife: v }))}
-                                    /> */}
+                                    <select
+                                        value={row.period}
+                                        onChange={v => dispatch(economicSlice.actions.updateAdditionalExpendituresRow({ idx, period: v.target.value as 'OneTime' | 'Yearly' }))}
+                                    >
+                                        <option key={'OneTime'} value={'OneTime'}>{'OneTime'}</option>
+                                        <option key={'Yearly'} value={'Yearly'}>{'Yearly'}</option>
+                                    </select>
                                 </td>
                                 <td>
-                                    {/* <button
+                                    <button
                                         onClick={() => dispatch(economicSlice.actions.insertAdditionalExpendituresRow(idx + 1))}
                                     >+</button>
                                     <button
@@ -74,7 +83,7 @@ export const AdditionalExpendituresTableView = (props: { tbl: AdditionalExpendit
                                     >-</button>
                                     <button
                                         onClick={() => dispatch(economicSlice.actions.duplicateAdditionalExpendituresRow(idx))}
-                                    >c</button> */}
+                                    >c</button>
                                 </td>
                             </tr>
                         )
@@ -83,11 +92,4 @@ export const AdditionalExpendituresTableView = (props: { tbl: AdditionalExpendit
             </table>
         </div>
     )
-}
-
-function uniqueEquipmentNames(current: string, arr: CapitalExpendituresRowState[]): string[] {
-    const names = arr.map(row => row.equipment.value)
-    names.splice(0, 0, '')
-    names.push(current)
-    return Array.from(new Set(names))
 }

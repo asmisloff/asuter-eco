@@ -7,9 +7,10 @@ import { AdditionalExpendituresRowDto, AdditionalExpendituresRowKwArgs, Addition
 export class AdditionalExpendituresStateHandler extends StateHandler<AdditionalExpendituresTableState, AdditionalExpendituresRowDto[]> {
     private rowCnt = Number.MIN_SAFE_INTEGER
 
-    readonly expItemHandler = new StringStringStateHandler(0, 50)
-    readonly priceHandler = new FloatStringStateHandler(0, 10e6, 2, true)
-    readonly qtyHandler = new IntStringStateHandler(1, 1e3, true)
+    private expItemHandler = new StringStringStateHandler(0, 50)
+    private equipmentHandler = new StringStringStateHandler(0, 50)
+    private priceHandler = new FloatStringStateHandler(0, 10e6, 2, true)
+    private qtyHandler = new IntStringStateHandler(1, 1e3, true)
 
     fromDto(dto: AdditionalExpendituresRowDto[]): AdditionalExpendituresTableState {
         throw new Error('Method not implemented.');
@@ -44,12 +45,11 @@ export class AdditionalExpendituresStateHandler extends StateHandler<AdditionalE
         if (!row) {
             throw new Error(`Ошибка индексации строк в таблице кап. затрат. Index: ${idx}; size: ${tgt.rows.length}`)
         }
-        row.expendureItem = this.expItemHandler.createOrDefault(kwargs.equipment, row.expendureItem)
+        row.expendureItem = this.expItemHandler.createOrDefault(kwargs.expendureItem, row.expendureItem)
         row.price = this.priceHandler.createOrDefault(kwargs.price?.toString(), row.price)
         row.qty = this.qtyHandler.createOrDefault(kwargs.qty?.toString(), row.qty)
-        row.equipment = kwargs.equipment ?? row.equipment
+        row.equipment = this.equipmentHandler.createOrDefault(kwargs.equipment, row.equipment)
         row.period = kwargs.period ?? row.period
-        console.log(row.equipment)
         this.validate(tgt)
     }
 
@@ -57,10 +57,10 @@ export class AdditionalExpendituresStateHandler extends StateHandler<AdditionalE
         const row: AdditionalExpendituresRowState = {
             handle: this.rowCnt++,
             expendureItem: this.expItemHandler.create(kwargs.expendureItem),
-            equipment: '',
+            equipment: this.equipmentHandler.create(kwargs.equipment),
             price: this.priceHandler.create(kwargs.price?.toString()),
             qty: this.qtyHandler.create(kwargs.qty?.toString()),
-            period: 'OneTime',
+            period: kwargs.period ?? 'OneTime',
             status: Status.Ok
         }
         tgt.rows = tgt.rows.slice()
@@ -79,11 +79,11 @@ export class AdditionalExpendituresStateHandler extends StateHandler<AdditionalE
         const src = tgt.rows[idx]
         const kwargs: AdditionalExpendituresRowKwArgs = {
             expendureItem: src.expendureItem.value,
-            equipment: src.equipment,
+            equipment: src.equipment.value,
             price: src.price.value,
             qty: src.qty.value,
             period: src.period
         }
-        this.insertRow(tgt, idx + 1, kwargs)
+        return this.insertRow(tgt, idx + 1, kwargs)
     }
 }

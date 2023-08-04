@@ -48,7 +48,7 @@ export abstract class StateHandler<S extends Verifiable, D> {
    * @param tgt целевой объект
    * @param e строка или массив строк с текстами ошибок
    */
-  addError(tgt: S, e: string): void {
+  addError(tgt: Verifiable, e: string): void {
     tgt.status = Status.Error;
     if (tgt.what == null) {
       tgt.what = [];
@@ -63,7 +63,7 @@ export abstract class StateHandler<S extends Verifiable, D> {
    * @param tgt целевой объект
    * @param w строка или массив строк с текстами ошибок
    */
-  addWarning(tgt: S, w: string): void {
+  addWarning(tgt: Verifiable, w: string): void {
     tgt.status = Math.max(Status.Warning, tgt.status);
     if (tgt.what == null) {
       tgt.what = [];
@@ -73,7 +73,7 @@ export abstract class StateHandler<S extends Verifiable, D> {
     }
   }
 
-  transferStatus(tgt: S, src: Verifiable): void {
+  transferStatus(tgt: Verifiable, src: Verifiable): void {
     tgt.status = Math.max(tgt.status, src.status);
     for (const s of src.what ?? []) {
       const m = src.status === Status.Warning ? this.addWarning : this.addError;
@@ -89,7 +89,7 @@ export abstract class StateHandler<S extends Verifiable, D> {
    * @param msg текст ошибки или предупреждения.
    */
   check(
-    tgt: S,
+    tgt: Verifiable,
     condition: boolean,
     status: Status.Error | Status.Warning,
     msg: string
@@ -110,7 +110,7 @@ export abstract class StateHandler<S extends Verifiable, D> {
   }
 
   /** Подготовить объект в валидации: установить status = Ok, удалить what. */
-  reset(tgt: S) {
+  reset(tgt: Verifiable) {
     tgt.status = Status.Ok;
     delete tgt.what;
   }

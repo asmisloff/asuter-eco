@@ -3,6 +3,7 @@ import { CapacityParamsStateHandlerKwArgs } from './model/capacity-params';
 import { EconomicStateHandler } from './handler/ActionsEffectivenessStateHandler';
 import { ParallelScheduleParamsKwArgs } from './model/parallel-schedule-params';
 import { CapitalExpendituresRowKwArgs } from './model/capital-expenditures';
+import { AdditionalExpendituresRowKwArgs } from './model/additional-expendures';
 
 const h = EconomicStateHandler.getInstance();
 
@@ -35,13 +36,21 @@ const economicSlice = createSlice({
       h.duplicateCapitalExpendituresRow(state, action.payload)
     },
 
-    updateAdditionalExpendituresRow(state, action: PayloadAction<{ idx: number } & CapitalExpendituresRowKwArgs>) {
+    updateAdditionalExpendituresRow(state, action: PayloadAction<{ idx: number } & AdditionalExpendituresRowKwArgs>) {
       h.updateAdditionalExpendituresRow(state, action.payload.idx, action.payload)
     },
 
     insertAdditionalExpendituresRow(state, action: PayloadAction<number>) {
       h.insertAdditionalExpendituresRow(state, action.payload)
-    }
+    },
+
+    deleteAdditionalExpendituresRow(state, action: PayloadAction<number>) {
+      h.deleteAdditionalExpendituresRow(state, action.payload)
+    },
+
+    duplicateAdditionalExpendituresRow(state, action: PayloadAction<number>) {
+      h.duplicateAdditionalExpendituresRow(state, action.payload)
+    },
   }
 });
 

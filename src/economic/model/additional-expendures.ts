@@ -11,7 +11,7 @@ export interface AdditionalExpendituresRowDto {
 
 export interface AdditionalExpendituresRowState extends Verifiable {
     expendureItem: StringState,
-    equipment: string,
+    equipment: StringState,
     price: StringState,
     qty: StringState,
     period: 'OneTime' | 'Yearly'

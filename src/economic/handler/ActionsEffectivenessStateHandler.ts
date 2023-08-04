@@ -1,26 +1,26 @@
 import { CapacityParamsStateHandler } from 'economic/handler/CapacityParamsStateHandler'
-import { StateHandler, Status, Verifiable } from '../../common/verifiable'
-import { CapacityParamsDto, CapacityParamsState, CapacityParamsStateHandlerKwArgs } from '../model/capacity-params'
-import { ParallelScheduleParamsKwArgs, ParallelScheduleParamsState } from '../model/parallel-schedule-params'
+import { StateHandler, Status } from '../../common/verifiable'
+import { CapacityParamsStateHandlerKwArgs } from '../model/capacity-params'
+import { ParallelScheduleParamsKwArgs } from '../model/parallel-schedule-params'
 import { ParallelScheduleParamsStateHandler } from 'economic/handler/ParallelScheduleParamsStateHandler'
-import { CapitalExpendituresRowKwArgs, CapitalExpendituresTableState } from '../model/capital-expenditures'
+import { CapitalExpendituresRowKwArgs, CapitalExpendituresRowState } from '../model/capital-expenditures'
 import { CapitalExpendituresStateHandler } from 'economic/handler/CapitalExpendituresStateHandler'
 import { MeasuresEffectivenessDto, MeasuresEffectivenessState } from 'economic/model/measure-effectiveness'
 import { AdditionalExpendituresStateHandler } from './AdditionalExpenduresStateHandler'
-import { AdditionalExpendituresRowKwArgs } from 'economic/model/additional-expendures'
+import { AdditionalExpendituresRowKwArgs, AdditionalExpendituresRowState } from 'economic/model/additional-expendures'
 
 export class EconomicStateHandler extends StateHandler<MeasuresEffectivenessState, MeasuresEffectivenessDto> {
 
+  private static _instance?: EconomicStateHandler = undefined
   readonly capacityHandler = new CapacityParamsStateHandler()
   readonly parSchHandler = new ParallelScheduleParamsStateHandler()
-  readonly capitalExpendituresHandler = new CapitalExpendituresStateHandler()
-  readonly additionalExpendituresHandler = new AdditionalExpendituresStateHandler()
+  private capitalExpendituresHandler = new CapitalExpendituresStateHandler()
+  private additionalExpendituresHandler = new AdditionalExpendituresStateHandler()
 
   private constructor() {
     super()
   }
 
-  private static _instance?: EconomicStateHandler = undefined
   static getInstance(): EconomicStateHandler {
     if (!EconomicStateHandler._instance) {
       EconomicStateHandler._instance = new EconomicStateHandler()
@@ -37,7 +37,9 @@ export class EconomicStateHandler extends StateHandler<MeasuresEffectivenessStat
   }
 
   validate(tgt: MeasuresEffectivenessState): Status {
-    throw new Error('Method not implemented.')
+    this.reset(tgt)
+    this.checkEquipmentNames(tgt)
+    return tgt.status
   }
 
   createDefault(): MeasuresEffectivenessState {
@@ -61,6 +63,9 @@ export class EconomicStateHandler extends StateHandler<MeasuresEffectivenessStat
 
   updateCapitalExpendituresRow(tgt: MeasuresEffectivenessState, idx: number, kwargs: CapitalExpendituresRowKwArgs) {
     this.capitalExpendituresHandler.updateRow(tgt.capitalExpenditures, idx, kwargs)
+    if (kwargs.equipment !== undefined) {
+      this.checkEquipmentNames(tgt)
+    }
   }
 
   insertCapitalExpendituresRow(tgt: MeasuresEffectivenessState, idx: number) {
@@ -69,6 +74,7 @@ export class EconomicStateHandler extends StateHandler<MeasuresEffectivenessStat
 
   deleteCapitalExpendituresRow(tgt: MeasuresEffectivenessState, idx: number) {
     this.capitalExpendituresHandler.deleteRow(tgt.capitalExpenditures, idx)
+    this.checkEquipmentNames(tgt)
   }
 
   duplicateCapitalExpendituresRow(tgt: MeasuresEffectivenessState, idx: number) {
@@ -80,6 +86,35 @@ export class EconomicStateHandler extends StateHandler<MeasuresEffectivenessStat
   }
 
   insertAdditionalExpendituresRow(tgt: MeasuresEffectivenessState, idx: number) {
-    this.additionalExpendituresHandler.insertRow(tgt.additionalExpenditures, idx, {})
+    const row = this.additionalExpendituresHandler.insertRow(tgt.additionalExpenditures, idx, {})
+    this.checkEquipmentNames(tgt, row)
+  }
+
+  deleteAdditionalExpendituresRow(tgt: MeasuresEffectivenessState, idx: number) {
+    this.additionalExpendituresHandler.deleteRow(tgt.additionalExpenditures, idx)
+  }
+
+  duplicateAdditionalExpendituresRow(tgt: MeasuresEffectivenessState, idx: number) {
+    const row = this.additionalExpendituresHandler.duplicateRow(tgt.additionalExpenditures, idx)
+    this.checkEquipmentNames(tgt, row)
+  }
+
+  uniqueEquipmentNames(current: string, arr: CapitalExpendituresRowState[]): string[] {
+    const names = arr.map(row => row.equipment.value)
+    names.splice(0, 0, '')
+    names.push(current)
+    return Array.from(new Set(names))
+  }
+
+  private checkEquipmentNames(tgt: MeasuresEffectivenessState, row?: AdditionalExpendituresRowState) {
+    const equipmentNames = this.uniqueEquipmentNames('', tgt.capitalExpenditures.rows)
+    const rows = row ? [row] : tgt.additionalExpenditures.rows
+    for (const row of rows) {
+      this.reset(row.equipment)
+      if (!equipmentNames.includes(row.equipment.value)) {
+        this.addWarning(row.equipment, 'Необъявленное оборудование')
+        this.transferStatus(tgt, row.equipment)
+      }
+    }
   }
 }
