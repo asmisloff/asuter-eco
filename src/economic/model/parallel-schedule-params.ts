@@ -16,13 +16,13 @@ export interface ParallelScheduleParamsDto {
 }
 
 export interface ParallelScheduleParamsKwArgs {
-    oldComputaion?: ParallelScheduleInfo
+    oldComputation?: ParallelScheduleInfo
     newComputation?: ParallelScheduleInfo
-    oldDailyConsumption?: number
-    newDailyConsumption?: number
+    oldDailyConsumption?: string | number
+    newDailyConsumption?: string | number
 }
 
-interface ParallelScheduleInfo {
+export interface ParallelScheduleInfo {
     id: number
     name: string
     consumption: number

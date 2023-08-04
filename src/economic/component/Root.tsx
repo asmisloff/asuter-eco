@@ -1,17 +1,18 @@
-import { useEffect } from 'react';
-import React from 'react';
-import { useAppDispatch, useAppSelector } from '../../store';
-import { EconomicStateHandler } from '../model/economic';
+import { useAppSelector } from '../../store';
 import { CapacityParamsView } from './CapacityParamsView';
+import { ParallelScheduleParamsView } from './ParallelScheduleParamsView';
+import React from 'react';
 
 export default function Root() {
   const state = useAppSelector((state) => state.economic);
-  const dispatch = useAppDispatch();
-  const h = EconomicStateHandler.getInstance();
-
   return (
-    <div>
-      <CapacityParamsView capacity={state.capacity} />
-    </div>
+    <>
+      <div>
+        <CapacityParamsView capacity={state.capacity} />
+      </div>
+      <div>
+        <ParallelScheduleParamsView sch={state.parallelSchedule} />
+      </div>
+    </>
   );
 }

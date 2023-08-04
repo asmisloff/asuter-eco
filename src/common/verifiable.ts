@@ -48,19 +48,13 @@ export abstract class StateHandler<S extends Verifiable, D> {
    * @param tgt целевой объект
    * @param e строка или массив строк с текстами ошибок
    */
-  addError(tgt: S, e: string | string[]): void {
+  addError(tgt: S, e: string): void {
     tgt.status = Status.Error;
     if (tgt.what == null) {
       tgt.what = [];
     }
-    if (typeof e === 'string' && tgt.what!.find((it) => it === e) == null) {
+    if (tgt.what!.find((it) => it === e) == null) {
       tgt.what.push(e);
-    } else {
-      for (const s of e as string[]) {
-        if (tgt.what!.find((it) => it === s) == null) {
-          tgt.what.push(s);
-        }
-      }
     }
   }
 
@@ -69,19 +63,13 @@ export abstract class StateHandler<S extends Verifiable, D> {
    * @param tgt целевой объект
    * @param w строка или массив строк с текстами ошибок
    */
-  addWarning(tgt: S, w: string | string[]): void {
+  addWarning(tgt: S, w: string): void {
     tgt.status = Math.max(Status.Warning, tgt.status);
     if (tgt.what == null) {
       tgt.what = [];
     }
-    if (typeof w === 'string' && tgt.what!.find((it) => it === w) == null) {
+    if (tgt.what!.find((it) => it === w) == null) {
       tgt.what.push(w);
-    } else {
-      for (const s of w as string[]) {
-        if (tgt.what!.find((it) => it === s) == null) {
-          tgt.what.push(s);
-        }
-      }
     }
   }
 

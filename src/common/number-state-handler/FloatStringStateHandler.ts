@@ -1,15 +1,16 @@
 import {
   StringState,
   StringStateHandler,
+  format,
   isBlank
 } from '.././StringStateHandler'
 import { Status } from '.././verifiable'
 
 export class FloatStringStateHandler extends StringStateHandler<number> {
-  private minValue: number
-  private maxValue: number
-  private precision: number
-  private required: boolean
+  readonly minValue: number
+  readonly maxValue: number
+  readonly precision: number
+  readonly required: boolean
 
   constructor(minValue: number, maxValue: number, precision: number, required: boolean) {
     super()
@@ -39,23 +40,23 @@ export class FloatStringStateHandler extends StringStateHandler<number> {
       const n = this.checkIsNumber(tgt)
       if (!isNaN(n)) {
         this.checkInRange(tgt, n, this.minValue, this.maxValue)
-        tgt.value = this.format(n, this.precision)
       }
     }
     return tgt.status
   }
 
-  equals(tgt: StringState, value: number): boolean {
-    return this.format(value, this.precision) === tgt.value
+  normalized(s?: string): string {
+    const n = this.parseNumber(s ?? '')
+    if (isNaN(n)) {
+      return s ?? ''
+    }
+    return format(n, this.precision)
   }
 
-  private parse(s: string): number {
-    s = s.replace(',', '.').replace(/\s/g, '')
-    return +s
-  }
-
-  private format(v: number, maxFractionDigits?: number, minFractionDigits?: number): string {
-    const options = { maximumFractionDigits: maxFractionDigits, minimumFractionDigits: minFractionDigits }
-    return (+v).toLocaleString('ru', options)
+  equal(tgt: StringState, value: number | string): boolean {
+    if (typeof(value) === 'number') {
+      value = format(value, this.precision, undefined, '')
+    }
+    return value === tgt.value
   }
 }

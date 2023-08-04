@@ -1,30 +1,30 @@
-import { CSSProperties } from 'react';
-import React from 'react';
-import { StringState } from '../../common/StringStateHandler';
-import { Status } from '../../common/verifiable';
-import { useAppDispatch } from '../../store';
-import { CapacityParamsState } from '../model/capacity-params';
-import { EconomicStateHandler } from '../model/economic';
-import economicSlice from '../slice';
-import './style.css';
+import { CSSProperties } from 'react'
+import React from 'react'
+import { StringState, localized } from '../../common/StringStateHandler'
+import { Status } from '../../common/verifiable'
+import { useAppDispatch } from '../../store'
+import { CapacityParamsState } from '../model/capacity-params'
+import { EconomicStateHandler } from '../model/economic'
+import economicSlice from '../slice'
+import './style.css'
 
 export function getStyle(status: Status): CSSProperties {
-  let color = '';
+  let color = ''
   if (status === Status.Error) {
-    color = 'pink';
+    color = 'pink'
   } else if (status === Status.Warning) {
-    color = 'lightyellow';
+    color = 'lightyellow'
   }
   return {
     backgroundColor: color
-  };
+  }
 }
 
-const CapacityEntryView = (props: {
-  state: StringState;
-  label: string;
-  placeholder: string;
-  onBlur: (v: string) => void;
+export const StringStateInput = (props: {
+  state: StringState
+  label: string
+  placeholder: string
+  onBlur: (v: string) => void
 }) => {
   return (
     <div>
@@ -35,17 +35,17 @@ const CapacityEntryView = (props: {
         defaultValue={props.state.value}
         style={getStyle(props.state.status)}
         className={'warning'}
-        title={props.state.what?.join('\n') ?? ''}
+        title={props.state.what?.map(s => localized(s))?.join('\n') ?? ''}
         placeholder={props.placeholder}
         onBlur={(e) => props.onBlur(e.target.value)}
       />
       <label htmlFor="mass"> - {props.label}</label>
     </div>
-  );
-};
+  )
+}
 
 export const CapacityParamsView = (props: {
-  capacity: CapacityParamsState;
+  capacity: CapacityParamsState
 }) => {
   const {
     oldCapacityInfo,
@@ -55,32 +55,35 @@ export const CapacityParamsView = (props: {
     newInterval,
     oldTrainQty,
     newTrainQty
-  } = props.capacity;
-  const dispatch = useAppDispatch();
-  const h = EconomicStateHandler.getInstance();
+  } = props.capacity
+  const dispatch = useAppDispatch()
+  const h = EconomicStateHandler.getInstance()
   return (
     <div>
+      <h2>Пропускная</h2>
       <textarea
         defaultValue={JSON.stringify(oldCapacityInfo)}
         onBlur={(e) =>
           dispatch(
-            economicSlice.actions.update_capacityParams({
+            economicSlice.actions.updateCapacityParams({
               oldCapacityInfo: JSON.parse(e.target.value)
             })
           )
         }
+        style={{width: 300, height: 120}}
       />
       <textarea
         defaultValue={JSON.stringify(newCapacityInfo)}
         onBlur={(e) =>
           dispatch(
-            economicSlice.actions.update_capacityParams({
+            economicSlice.actions.updateCapacityParams({
               newCapacityInfo: JSON.parse(e.target.value)
             })
           )
         }
+        style={{width: 300, height: 120}}
       />
-      <CapacityEntryView
+      <StringStateInput
         state={maxTrainMass}
         label={'Масса'}
         placeholder={
@@ -88,50 +91,50 @@ export const CapacityParamsView = (props: {
         }
         onBlur={(v) =>
           dispatch(
-            economicSlice.actions.update_capacityParams({ maxTrainMass: v })
+            economicSlice.actions.updateCapacityParams({ maxTrainMass: v })
           )
         }
       />
-      <CapacityEntryView
+      <StringStateInput
         state={oldInterval}
         label={'Старый интервал'}
         placeholder={props.capacity.oldCapacityInfo?.interval?.toString() ?? ''}
         onBlur={(v) =>
           dispatch(
-            economicSlice.actions.update_capacityParams({ oldInterval: v })
+            economicSlice.actions.updateCapacityParams({ oldInterval: v })
           )
         }
       />
-      <CapacityEntryView
+      <StringStateInput
         state={newInterval}
         label={'Новый интервал'}
         placeholder={props.capacity.newCapacityInfo?.interval?.toString() ?? ''}
         onBlur={(v) =>
           dispatch(
-            economicSlice.actions.update_capacityParams({ newInterval: v })
+            economicSlice.actions.updateCapacityParams({ newInterval: v })
           )
         }
       />
-      <CapacityEntryView
+      <StringStateInput
         state={oldTrainQty}
         label={'Старое количество'}
         placeholder={props.capacity.oldCapacityInfo?.trainQty?.toString() ?? ''}
         onBlur={(v) =>
           dispatch(
-            economicSlice.actions.update_capacityParams({ oldTrainQty: v })
+            economicSlice.actions.updateCapacityParams({ oldTrainQty: v })
           )
         }
       />
-      <CapacityEntryView
+      <StringStateInput
         state={newTrainQty}
         label={'Новое количество'}
         placeholder={props.capacity.newCapacityInfo?.trainQty?.toString() ?? ''}
         onBlur={(v) =>
           dispatch(
-            economicSlice.actions.update_capacityParams({ newTrainQty: v })
+            economicSlice.actions.updateCapacityParams({ newTrainQty: v })
           )
         }
       />
     </div>
-  );
-};
+  )
+}

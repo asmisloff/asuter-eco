@@ -1,14 +1,14 @@
 import { FloatStringStateHandler } from 'common/number-state-handler/FloatStringStateHandler'
 import { StateHandler, Status } from 'common/verifiable'
 import { DEFAULT_AND_ACTUAL_VALUES_DONT_MATCH } from 'economic/const'
-import { ParallelScheduleParamsDto, ParallelScheduleParamsKwArgs, ParallelScheduleParamsState } from 'economic/model/parallel-schedule-params'
+import { ParallelScheduleInfo, ParallelScheduleParamsDto, ParallelScheduleParamsKwArgs, ParallelScheduleParamsState } from 'economic/model/parallel-schedule-params'
 
 export class ParallelScheduleParamsStateHandler extends StateHandler<ParallelScheduleParamsState, ParallelScheduleParamsDto> {
 
-    readonly dailyConsumptionHandler = new FloatStringStateHandler(0, 1e6, 2, false)
+    readonly dcHandler = new FloatStringStateHandler(0, 1e6, 3, false)
 
     fromDto(dto: ParallelScheduleParamsDto): ParallelScheduleParamsState {
-        throw new Error('Method not implemented.')
+        return this.create(dto)
     }
 
     toDto(state: ParallelScheduleParamsState): ParallelScheduleParamsDto {
@@ -18,16 +18,16 @@ export class ParallelScheduleParamsStateHandler extends StateHandler<ParallelSch
     validate(tgt: ParallelScheduleParamsState): Status {
         this.reset(tgt)
 
-        if (tgt.oldComputation == null) {
-            this.dailyConsumptionHandler.checkIsNotBlank(tgt.oldDailyConsumption)
-        } else if (!this.dailyConsumptionHandler.equals(tgt.oldDailyConsumption, tgt.oldComputation.consumption)) {
-            this.dailyConsumptionHandler.addWarning(tgt.oldDailyConsumption, DEFAULT_AND_ACTUAL_VALUES_DONT_MATCH)
+        if (tgt.oldComputation === null) {
+            this.dcHandler.checkIsNotBlank(tgt.oldDailyConsumption)
+        } else if (tgt.oldDailyConsumption.value !== '' && !this.dcHandler.equal(tgt.oldDailyConsumption, this.defaultDailyConsumption(tgt.oldComputation))) {
+            this.dcHandler.addWarning(tgt.oldDailyConsumption, DEFAULT_AND_ACTUAL_VALUES_DONT_MATCH)
         }
 
-        if (tgt.newComputation == null) {
-            this.dailyConsumptionHandler.checkIsNotBlank(tgt.newDailyConsumption)
-        } else if (!this.dailyConsumptionHandler.equals(tgt.newDailyConsumption, tgt.newComputation.consumption)) {
-            this.dailyConsumptionHandler.addWarning(tgt.newDailyConsumption, DEFAULT_AND_ACTUAL_VALUES_DONT_MATCH)
+        if (tgt.newComputation === null) {
+            this.dcHandler.checkIsNotBlank(tgt.newDailyConsumption)
+        } else if (tgt.newDailyConsumption.value !== '' && !this.dcHandler.equal(tgt.newDailyConsumption, this.defaultDailyConsumption(tgt.newComputation))) {
+            this.dcHandler.addWarning(tgt.newDailyConsumption, DEFAULT_AND_ACTUAL_VALUES_DONT_MATCH)
         }
 
         this.transferStatus(tgt, tgt.oldDailyConsumption)
@@ -36,13 +36,36 @@ export class ParallelScheduleParamsStateHandler extends StateHandler<ParallelSch
     }
 
     create(kwargs: ParallelScheduleParamsKwArgs): ParallelScheduleParamsState {
-        return {
+        const instance = {
             handle: this.cnt++,
-            oldComputation: kwargs.oldComputaion ?? null,
+            oldComputation: kwargs.oldComputation ?? null,
             newComputation: kwargs.newComputation ?? null,
-            oldDailyConsumption: this.dailyConsumptionHandler.create(kwargs.newDailyConsumption?.toString()),
-            newDailyConsumption: this.dailyConsumptionHandler.create(kwargs.oldDailyConsumption?.toString()),
+            oldDailyConsumption: this.dcHandler.create(kwargs.newDailyConsumption?.toString()),
+            newDailyConsumption: this.dcHandler.create(kwargs.oldDailyConsumption?.toString()),
             status: Status.Ok
         }
+        this.validate(instance)
+        return instance
+    }
+
+    update(tgt: ParallelScheduleParamsState, kwargs: ParallelScheduleParamsKwArgs) {
+        tgt.oldDailyConsumption = this.dcHandler.createOrDefault(kwargs.oldDailyConsumption?.toString(), tgt.oldDailyConsumption)
+        tgt.newDailyConsumption = this.dcHandler.createOrDefault(kwargs.newDailyConsumption?.toString(), tgt.newDailyConsumption)
+        if (kwargs.oldComputation !== undefined) {
+            tgt.oldComputation = kwargs.oldComputation
+            tgt.oldDailyConsumption = this.dcHandler.copy(tgt.oldDailyConsumption)
+        }
+        if (kwargs.newComputation !== undefined) {
+            tgt.newComputation = kwargs.newComputation
+            tgt.newDailyConsumption = this.dcHandler.copy(tgt.newDailyConsumption)
+        }
+        this.validate(tgt)
+    }
+
+    defaultDailyConsumption(schInfo: ParallelScheduleInfo | null): string {
+        if (schInfo) {
+            return this.dcHandler.normalized((schInfo.consumption * 1440 / schInfo.duration).toString())
+        }
+        return ''
     }
 }
