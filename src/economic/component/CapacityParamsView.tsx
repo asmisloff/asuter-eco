@@ -4,7 +4,7 @@ import { StringState, localized } from '../../common/StringStateHandler'
 import { Status } from '../../common/verifiable'
 import { useAppDispatch } from '../../store'
 import { CapacityParamsState } from '../model/capacity-params'
-import { EconomicStateHandler } from '../model/economic'
+import { EconomicStateHandler } from '../handler/ActionsEffectivenessStateHandler'
 import economicSlice from '../slice'
 import './style.css'
 
@@ -22,7 +22,7 @@ export function getStyle(status: Status): CSSProperties {
 
 export const StringStateInput = (props: {
   state: StringState
-  label: string
+  label?: string
   placeholder: string
   onBlur: (v: string) => void
 }) => {
@@ -39,7 +39,7 @@ export const StringStateInput = (props: {
         placeholder={props.placeholder}
         onBlur={(e) => props.onBlur(e.target.value)}
       />
-      <label htmlFor="mass"> - {props.label}</label>
+      {props.label && <label htmlFor="mass"> - {props.label}</label>}
     </div>
   )
 }
@@ -70,7 +70,7 @@ export const CapacityParamsView = (props: {
             })
           )
         }
-        style={{width: 300, height: 120}}
+        style={{ width: 300, height: 120 }}
       />
       <textarea
         defaultValue={JSON.stringify(newCapacityInfo)}
@@ -81,7 +81,7 @@ export const CapacityParamsView = (props: {
             })
           )
         }
-        style={{width: 300, height: 120}}
+        style={{ width: 300, height: 120 }}
       />
       <StringStateInput
         state={maxTrainMass}

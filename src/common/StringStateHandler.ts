@@ -122,13 +122,7 @@ export abstract class StringStateHandler<D> extends StateHandler<StringState, D>
     )
   }
 
-  normalized(s?: string): string {
-    s = s?.trim()
-    if (s == null) {
-      return ''
-    }
-    return localized(s)
-  }
+  abstract normalized(s?: string): string
 
   protected parseNumber(s: string): number {
     s = s.replace(',', '.').replace(/\s/g, '')

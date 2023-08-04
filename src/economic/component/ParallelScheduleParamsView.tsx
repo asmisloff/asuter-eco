@@ -3,7 +3,7 @@ import { StringStateInput } from './CapacityParamsView';
 import React from 'react';
 import { useAppDispatch } from 'store';
 import economicSlice from 'economic/slice';
-import { EconomicStateHandler } from 'economic/model/economic';
+import { EconomicStateHandler } from 'economic/handler/ActionsEffectivenessStateHandler';
 
 export const ParallelScheduleParamsView = (props: { sch: ParallelScheduleParamsState }) => {
     const dispatch = useAppDispatch()
