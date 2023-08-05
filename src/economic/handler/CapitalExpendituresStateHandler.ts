@@ -1,10 +1,12 @@
-import { FloatStringStateHandler } from 'common/number-state-handler/FloatStringStateHandler';
-import { IntStringStateHandler } from 'common/number-state-handler/IntStringStateHandler';
-import { StringStringStateHandler } from 'common/number-state-handler/StringStringStateHandler';
-import { StateHandler, Status } from 'common/verifiable';
-import { CapitalExpendituresRowDto, CapitalExpendituresRowKwArgs, CapitalExpendituresRowState, CapitalExpendituresTableState } from 'economic/model/capital-expenditures';
+import { FloatStringStateHandler } from 'common/number-state-handler/FloatStringStateHandler'
+import { IntStringStateHandler } from 'common/number-state-handler/IntStringStateHandler'
+import { StringStringStateHandler } from 'common/StringStringStateHandler'
+import { StateHandler, Status } from 'common/verifiable'
+import {
+    CapitalExpendituresRowDto, CapitalExpendituresRowKwArgs, CapitalExpendituresRowState, CapitalExpendituresTableState
+} from 'economic/model/capital-expenditures'
 
-export class CapitalExpendituresStateHandler extends StateHandler<CapitalExpendituresTableState, CapitalExpendituresRowDto[]> {
+export class CapitalExpendituresStateHandler extends StateHandler<CapitalExpendituresTableState> {
     private rowCnt = Number.MIN_SAFE_INTEGER
 
     readonly equipmentHandler = new StringStringStateHandler(5, 50)
@@ -14,11 +16,11 @@ export class CapitalExpendituresStateHandler extends StateHandler<CapitalExpendi
     readonly serviceLifeHandler = new IntStringStateHandler(1, 100, true)
 
     fromDto(dto: CapitalExpendituresRowDto[]): CapitalExpendituresTableState {
-        throw new Error('Method not implemented.');
+        throw new Error('Method not implemented.')
     }
 
     toDto(state: CapitalExpendituresTableState): CapitalExpendituresRowDto[] {
-        throw new Error('Method not implemented.');
+        throw new Error('Method not implemented.')
     }
 
     validate(tgt: CapitalExpendituresTableState): Status {
@@ -36,7 +38,7 @@ export class CapitalExpendituresStateHandler extends StateHandler<CapitalExpendi
     createDefault(): CapitalExpendituresTableState {
         const tbl: CapitalExpendituresTableState = {
             rows: [],
-            handle: this.cnt++,
+            handle: StateHandler.cnt++,
             status: Status.Ok
         }
         this.insertRow(tbl, 0, {})

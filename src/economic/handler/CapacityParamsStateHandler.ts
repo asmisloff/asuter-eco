@@ -1,10 +1,9 @@
-import { isBlank } from 'common/StringStateHandler'
 import { FloatStringStateHandler } from 'common/number-state-handler/FloatStringStateHandler'
 import { StateHandler, Status, Verifiable } from 'common/verifiable'
 import { DEFAULT_AND_ACTUAL_VALUES_DONT_MATCH } from 'economic/const'
 import { CapacityParamsDto, CapacityParamsState, CapacityParamsStateHandlerKwArgs } from 'economic/model/capacity-params'
 
-export class CapacityParamsStateHandler extends StateHandler<CapacityParamsState, CapacityParamsDto> {
+export class CapacityParamsStateHandler extends StateHandler<CapacityParamsState> {
   private massHandler = new FloatStringStateHandler(0, 110e3, 3, false)
   private intervalHandler = new FloatStringStateHandler(0, 1440, 1, false)
   private trainQtyHandler = new FloatStringStateHandler(0, 1000, 1, false)
@@ -68,7 +67,7 @@ export class CapacityParamsStateHandler extends StateHandler<CapacityParamsState
 
   create(kwargs: CapacityParamsStateHandlerKwArgs) {
     const s: CapacityParamsState = {
-      handle: this.cnt++,
+      handle: StateHandler.cnt++,
       status: Status.Ok,
       oldCapacityInfo: kwargs.oldCapacityInfo ?? null,
       newCapacityInfo: kwargs.newCapacityInfo ?? null,

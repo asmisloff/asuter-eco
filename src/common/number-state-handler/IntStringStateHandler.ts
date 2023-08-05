@@ -23,17 +23,6 @@ export class IntStringStateHandler extends FloatStringStateHandler {
     this.required = required;
   }
 
-  toOptionalDto(state: StringState): number | undefined {
-    if (isBlank(state.value) && !this.required) {
-      return undefined;
-    }
-    return this.toDto(state);
-  }
-
-  toDto(state: StringState): number {
-    return +state.value;
-  }
-
   validate(tgt: StringState): Status {
     this.reset(tgt);
     if (this.required) {

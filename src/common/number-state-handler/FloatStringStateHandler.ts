@@ -6,7 +6,7 @@ import {
 } from '.././StringStateHandler'
 import { Status } from '.././verifiable'
 
-export class FloatStringStateHandler extends StringStateHandler<number> {
+export class FloatStringStateHandler extends StringStateHandler {
   readonly minValue: number
   readonly maxValue: number
   readonly precision: number
@@ -19,18 +19,7 @@ export class FloatStringStateHandler extends StringStateHandler<number> {
     this.precision = precision
     this.required = required
   }
-
-  toOptionalDto(state: StringState): number | undefined {
-    if (isBlank(state.value) && !this.required) {
-      return undefined
-    }
-    return this.toDto(state)
-  }
-
-  toDto(state: StringState): number {
-    return +state.value
-  }
-
+  
   validate(tgt: StringState): Status {
     this.reset(tgt)
     if (this.required) {

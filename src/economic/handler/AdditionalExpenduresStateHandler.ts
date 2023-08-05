@@ -1,10 +1,10 @@
 import { FloatStringStateHandler } from 'common/number-state-handler/FloatStringStateHandler';
 import { IntStringStateHandler } from 'common/number-state-handler/IntStringStateHandler';
-import { StringStringStateHandler } from 'common/number-state-handler/StringStringStateHandler';
+import { StringStringStateHandler } from 'common/StringStringStateHandler';
 import { StateHandler, Status } from 'common/verifiable';
 import { AdditionalExpendituresRowDto, AdditionalExpendituresRowKwArgs, AdditionalExpendituresRowState, AdditionalExpendituresTableState } from 'economic/model/additional-expendures';
 
-export class AdditionalExpendituresStateHandler extends StateHandler<AdditionalExpendituresTableState, AdditionalExpendituresRowDto[]> {
+export class AdditionalExpendituresStateHandler extends StateHandler<AdditionalExpendituresTableState> {
     private rowCnt = Number.MIN_SAFE_INTEGER
 
     private expItemHandler = new StringStringStateHandler(0, 50)
@@ -33,7 +33,7 @@ export class AdditionalExpendituresStateHandler extends StateHandler<AdditionalE
     createDefault(): AdditionalExpendituresTableState {
         const tbl: AdditionalExpendituresTableState = {
             rows: [],
-            handle: this.cnt++,
+            handle: StateHandler.cnt++,
             status: Status.Ok
         }
         this.insertRow(tbl, 0, {})

@@ -1,8 +1,8 @@
-import { StringState, StringStateHandler } from 'common/StringStateHandler';
-import { Status } from 'common/verifiable';
-import { MAX_SYMBOL_QTY } from 'economic/const';
+import { StringState, StringStateHandler } from 'common/StringStateHandler'
+import { Status } from 'common/verifiable'
+import { MAX_SYMBOL_QTY } from 'economic/const'
 
-export class StringStringStateHandler extends StringStateHandler<string> {
+export class StringStringStateHandler extends StringStateHandler {
 
     private maxLength: number
     private minLength: number

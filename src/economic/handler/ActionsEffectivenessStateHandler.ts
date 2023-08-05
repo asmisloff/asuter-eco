@@ -9,7 +9,7 @@ import { MeasuresEffectivenessDto, MeasuresEffectivenessState } from 'economic/m
 import { AdditionalExpendituresStateHandler } from './AdditionalExpenduresStateHandler'
 import { AdditionalExpendituresRowKwArgs, AdditionalExpendituresRowState } from 'economic/model/additional-expendures'
 
-export class EconomicStateHandler extends StateHandler<MeasuresEffectivenessState, MeasuresEffectivenessDto> {
+export class EconomicStateHandler extends StateHandler<MeasuresEffectivenessState> {
 
   private static _instance?: EconomicStateHandler = undefined
   readonly capacityHandler = new CapacityParamsStateHandler()
@@ -44,7 +44,7 @@ export class EconomicStateHandler extends StateHandler<MeasuresEffectivenessStat
 
   createDefault(): MeasuresEffectivenessState {
     return {
-      handle: this.cnt++,
+      handle: StateHandler.cnt++,
       status: Status.Ok,
       capacity: this.capacityHandler.create({}),
       parallelSchedule: this.parSchHandler.create({}),

@@ -3,7 +3,7 @@ import { StateHandler, Status } from 'common/verifiable'
 import { DEFAULT_AND_ACTUAL_VALUES_DONT_MATCH } from 'economic/const'
 import { ParallelScheduleInfo, ParallelScheduleParamsDto, ParallelScheduleParamsKwArgs, ParallelScheduleParamsState } from 'economic/model/parallel-schedule-params'
 
-export class ParallelScheduleParamsStateHandler extends StateHandler<ParallelScheduleParamsState, ParallelScheduleParamsDto> {
+export class ParallelScheduleParamsStateHandler extends StateHandler<ParallelScheduleParamsState> {
 
     readonly dcHandler = new FloatStringStateHandler(0, 1e6, 3, false)
 
@@ -37,7 +37,7 @@ export class ParallelScheduleParamsStateHandler extends StateHandler<ParallelSch
 
     create(kwargs: ParallelScheduleParamsKwArgs): ParallelScheduleParamsState {
         const instance = {
-            handle: this.cnt++,
+            handle: StateHandler.cnt++,
             oldComputation: kwargs.oldComputation ?? null,
             newComputation: kwargs.newComputation ?? null,
             oldDailyConsumption: this.dcHandler.create(kwargs.newDailyConsumption?.toString()),

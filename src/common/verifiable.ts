@@ -25,17 +25,11 @@ export enum Status {
  * @param S тип управляемого объекта.
  * @param D тип Dto управляемого объекта.
  */
-export abstract class StateHandler<S extends Verifiable, D> {
+export abstract class StateHandler<S extends Verifiable> {
   /** Счетчик с автоинкрементом при создании новго объекта StringState.
    * Текущее значение присваивается полю handle вновь создаваемого объекта.
    */
-  protected cnt = Number.MIN_SAFE_INTEGER;
-
-  /** Преобразование Dto -> State. */
-  abstract fromDto(dto: D): S;
-
-  /** Преобразование State -> Dto. */
-  abstract toDto(state: S): D;
+  protected static cnt = Number.MIN_SAFE_INTEGER;
 
   /**
    * Проверяет собственные инварианты объекта. Изменяет status и what управляемого объекта.

@@ -12,13 +12,7 @@ export function isBlank(s: string): boolean {
 /**
  * Определяет интерфейс и общую логику для управления верифицируемым строковым состоянием.
  */
-export abstract class StringStateHandler<D> extends StateHandler<StringState, D> {
-
-  fromDto(dto: D): StringState {
-    return this.create(`${dto}`)
-  }
-
-  abstract toDto(state: StringState): D
+export abstract class StringStateHandler extends StateHandler<StringState> {
 
   /**
    * Создать копию управляемого объекта.
@@ -35,7 +29,7 @@ export abstract class StringStateHandler<D> extends StateHandler<StringState, D>
    */
   create(value?: string): StringState {
     const instance = {
-      handle: this.cnt++,
+      handle: StateHandler.cnt++,
       value: this.normalized(value),
       status: Status.Ok
     } as StringState
@@ -46,7 +40,7 @@ export abstract class StringStateHandler<D> extends StateHandler<StringState, D>
   createOrDefault(newValue: string | undefined, _default: StringState): StringState {
     if (newValue != null && newValue !== _default.value) {
       const newInstance = {
-        handle: this.cnt++,
+        handle: StateHandler.cnt++,
         value: this.normalized(newValue),
         status: Status.Ok
       } as StringState
