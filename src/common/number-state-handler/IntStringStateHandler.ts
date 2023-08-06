@@ -22,22 +22,4 @@ export class IntStringStateHandler extends FloatStringStateHandler {
     this.maxValue = maxValue;
     this.required = required;
   }
-
-  validate(tgt: StringState): Status {
-    this.reset(tgt);
-    if (this.required) {
-      this.checkIsNotBlank(tgt);
-    }
-    if (!isBlank(tgt.value)) {
-      const n = this.checkIsNumber(tgt);
-      if (!isNaN(n)) {
-        const isInt = this.checkIsInteger(tgt, n);
-        if (isInt) {
-          this.checkInRange(tgt, n, this.minValue, this.maxValue);
-          tgt.value = n.toString();
-        }
-      }
-    }
-    return tgt.status;
-  }
 }

@@ -1,6 +1,6 @@
 import { CapacityParamsStateHandler } from 'economic/handler/CapacityParamsStateHandler'
 import { StateHandler, Status } from '../../common/verifiable'
-import { CapacityParamsStateHandlerKwArgs } from '../model/capacity-params'
+import { CapacityParamsKw } from '../model/capacity-params'
 import { ParallelScheduleParamsKwArgs } from '../model/parallel-schedule-params'
 import { ParallelScheduleParamsStateHandler } from 'economic/handler/ParallelScheduleParamsStateHandler'
 import { CapitalExpendituresRowKwArgs, CapitalExpendituresRowState } from '../model/capital-expenditures'
@@ -8,6 +8,10 @@ import { CapitalExpendituresStateHandler } from 'economic/handler/CapitalExpendi
 import { MeasuresEffectivenessDto, MeasuresEffectivenessState } from 'economic/model/measure-effectiveness'
 import { AdditionalExpendituresStateHandler } from './AdditionalExpenduresStateHandler'
 import { AdditionalExpendituresRowKwArgs, AdditionalExpendituresRowState } from 'economic/model/additional-expendures'
+import { StringStateTableHandler } from 'common/StringStateTableHandler'
+import { SalaryRowStateHandler } from './SalaryStateHandler'
+import { SalaryStateKw } from 'economic/model/salary'
+import { StringState } from 'common/StringStateHandler'
 
 export class EconomicStateHandler extends StateHandler<MeasuresEffectivenessState> {
 
@@ -16,6 +20,7 @@ export class EconomicStateHandler extends StateHandler<MeasuresEffectivenessStat
   readonly parSchHandler = new ParallelScheduleParamsStateHandler()
   private capitalExpendituresHandler = new CapitalExpendituresStateHandler()
   private additionalExpendituresHandler = new AdditionalExpendituresStateHandler()
+  private salaryHandler = new StringStateTableHandler(new SalaryRowStateHandler())
 
   private constructor() {
     super()
@@ -38,22 +43,26 @@ export class EconomicStateHandler extends StateHandler<MeasuresEffectivenessStat
 
   validate(tgt: MeasuresEffectivenessState): Status {
     this.reset(tgt)
-    this.checkEquipmentNames(tgt)
+    this.checkEquipmentNames(tgt, tgt.additionalExpenditures.rows)
+    this.checkEquipmentNames(tgt, tgt.salary.rows)
     return tgt.status
   }
 
   createDefault(): MeasuresEffectivenessState {
-    return {
+    const state = {
       handle: StateHandler.cnt++,
       status: Status.Ok,
       capacity: this.capacityHandler.create({}),
       parallelSchedule: this.parSchHandler.create({}),
       capitalExpenditures: this.capitalExpendituresHandler.createDefault(),
-      additionalExpenditures: this.additionalExpendituresHandler.createDefault()
+      additionalExpenditures: this.additionalExpendituresHandler.createDefault(),
+      salary: this.salaryHandler.createDefault()
     }
+    console.log(state)
+    return state
   }
 
-  updateCapacityParams(tgt: MeasuresEffectivenessState, kwargs: CapacityParamsStateHandlerKwArgs) {
+  updateCapacityParams(tgt: MeasuresEffectivenessState, kwargs: CapacityParamsKw) {
     this.capacityHandler.update(tgt.capacity, kwargs)
   }
 
@@ -64,7 +73,8 @@ export class EconomicStateHandler extends StateHandler<MeasuresEffectivenessStat
   updateCapitalExpendituresRow(tgt: MeasuresEffectivenessState, idx: number, kwargs: CapitalExpendituresRowKwArgs) {
     this.capitalExpendituresHandler.updateRow(tgt.capitalExpenditures, idx, kwargs)
     if (kwargs.equipment !== undefined) {
-      this.checkEquipmentNames(tgt)
+      this.checkEquipmentNames(tgt, tgt.additionalExpenditures.rows)
+      this.checkEquipmentNames(tgt, tgt.salary.rows)
     }
   }
 
@@ -74,7 +84,8 @@ export class EconomicStateHandler extends StateHandler<MeasuresEffectivenessStat
 
   deleteCapitalExpendituresRow(tgt: MeasuresEffectivenessState, idx: number) {
     this.capitalExpendituresHandler.deleteRow(tgt.capitalExpenditures, idx)
-    this.checkEquipmentNames(tgt)
+    this.checkEquipmentNames(tgt, tgt.additionalExpenditures.rows)
+    this.checkEquipmentNames(tgt, tgt.salary.rows)
   }
 
   duplicateCapitalExpendituresRow(tgt: MeasuresEffectivenessState, idx: number) {
@@ -87,7 +98,7 @@ export class EconomicStateHandler extends StateHandler<MeasuresEffectivenessStat
 
   insertAdditionalExpendituresRow(tgt: MeasuresEffectivenessState, idx: number) {
     const row = this.additionalExpendituresHandler.insertRow(tgt.additionalExpenditures, idx, {})
-    this.checkEquipmentNames(tgt, row)
+    this.checkEquipmentNames(tgt, [row])
   }
 
   deleteAdditionalExpendituresRow(tgt: MeasuresEffectivenessState, idx: number) {
@@ -96,7 +107,7 @@ export class EconomicStateHandler extends StateHandler<MeasuresEffectivenessStat
 
   duplicateAdditionalExpendituresRow(tgt: MeasuresEffectivenessState, idx: number) {
     const row = this.additionalExpendituresHandler.duplicateRow(tgt.additionalExpenditures, idx)
-    this.checkEquipmentNames(tgt, row)
+    this.checkEquipmentNames(tgt, [row])
   }
 
   uniqueEquipmentNames(current: string, arr: CapitalExpendituresRowState[]): string[] {
@@ -106,10 +117,28 @@ export class EconomicStateHandler extends StateHandler<MeasuresEffectivenessStat
     return Array.from(new Set(names))
   }
 
-  private checkEquipmentNames(tgt: MeasuresEffectivenessState, row?: AdditionalExpendituresRowState) {
+  insertSalaryRow(tgt: MeasuresEffectivenessState, idx: number) {
+    const row = this.salaryHandler.insertRow(tgt.salary, idx, {})
+    this.checkEquipmentNames(tgt, [row])
+  }
+
+  updateSalaryRow(tgt: MeasuresEffectivenessState, idx: number, kwargs: SalaryStateKw) {
+    this.salaryHandler.updateRow(tgt.salary, idx, kwargs)
+  }
+
+  deleteSalaryRow(tgt: MeasuresEffectivenessState, idx: number) {
+    this.salaryHandler.deleteRow(tgt.salary, idx)
+  }
+
+  duplicateSalaryRow(tgt: MeasuresEffectivenessState, idx: number) {
+    const row = this.salaryHandler.duplicateRow(tgt.salary, idx)
+    this.checkEquipmentNames(tgt, [row])
+  }
+
+
+  private checkEquipmentNames(tgt: MeasuresEffectivenessState, dependentRows: { equipment: StringState }[]) {
     const equipmentNames = this.uniqueEquipmentNames('', tgt.capitalExpenditures.rows)
-    const rows = row ? [row] : tgt.additionalExpenditures.rows
-    for (const row of rows) {
+    for (const row of dependentRows) {
       this.reset(row.equipment)
       if (!equipmentNames.includes(row.equipment.value)) {
         this.addWarning(row.equipment, 'Необъявленное оборудование')

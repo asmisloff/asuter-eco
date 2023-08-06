@@ -1,9 +1,10 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { CapacityParamsStateHandlerKwArgs } from './model/capacity-params';
+import { CapacityParamsKw } from './model/capacity-params';
 import { EconomicStateHandler } from './handler/ActionsEffectivenessStateHandler';
 import { ParallelScheduleParamsKwArgs } from './model/parallel-schedule-params';
 import { CapitalExpendituresRowKwArgs } from './model/capital-expenditures';
 import { AdditionalExpendituresRowKwArgs } from './model/additional-expendures';
+import { SalaryStateKw } from './model/salary'
 
 const h = EconomicStateHandler.getInstance();
 
@@ -11,7 +12,7 @@ const economicSlice = createSlice({
   name: 'economic',
   initialState: h.createDefault(),
   reducers: {
-    updateCapacityParams(state, action: PayloadAction<CapacityParamsStateHandlerKwArgs>) {
+    updateCapacityParams(state, action: PayloadAction<CapacityParamsKw>) {
       h.updateCapacityParams(state, action.payload);
     },
 
@@ -50,6 +51,22 @@ const economicSlice = createSlice({
 
     duplicateAdditionalExpendituresRow(state, action: PayloadAction<number>) {
       h.duplicateAdditionalExpendituresRow(state, action.payload)
+    },
+
+    insertSalaryRow(state, action: PayloadAction<number>) {
+      h.insertSalaryRow(state, action.payload)
+    },
+
+    updateSalaryRow(state, action: PayloadAction<{idx: number} & SalaryStateKw>) {
+      h.updateSalaryRow(state, action.payload.idx, action.payload)
+    },
+
+    deleteSalaryRow(state, action: PayloadAction<number>) {
+      h.deleteSalaryRow(state, action.payload)
+    },
+
+    duplicateSalaryRow(state, action: PayloadAction<number>) {
+      h.duplicateSalaryRow(state, action.payload)
     },
   }
 });

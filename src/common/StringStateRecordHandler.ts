@@ -3,17 +3,18 @@ import { StateHandler, Status, Verifiable } from './verifiable'
 
 export abstract class StringStateRecordHandler<R extends Verifiable, K extends Record<string, any>> extends StateHandler<R> {
 
-    protected abstract handlers: Record<keyof K, StringStateHandler | ((arg?: any) => any)>
-    protected abstract keys: Array<keyof K>
+    readonly abstract handlers: Record<keyof K, StringStateHandler | ((arg?: any) => any)>
 
     create(kwargs: K): R {
         const row = {} as any
-        for (const key of this.keys) {
-            const h = this.handlers[key]
-            if (h instanceof StringStateHandler) {
-                row[key] = h.create(kwargs[key])
-            } else {
-                row[key] = h(kwargs[key])
+        for (const key in this.handlers) {
+            if (!['handle', 'status', 'what'].includes(key)) {
+                const h = this.handlers[key]
+                if (h instanceof StringStateHandler) {
+                    row[key] = h.create(kwargs[key])
+                } else {
+                    row[key] = h(kwargs[key])
+                }
             }
         }
         row.handle = StateHandler.cnt++
@@ -24,14 +25,16 @@ export abstract class StringStateRecordHandler<R extends Verifiable, K extends R
 
     update(tgt: R, kwargs: K): R {
         const row = tgt as any
-        for (const key of this.keys) {
-            const newValue = kwargs[key]
-            if (newValue !== undefined) {
-                const h = this.handlers[key]
-                if (h instanceof StringStateHandler) {
-                    row[key] = h.create(kwargs[key])
-                } else {
-                    row[key] = h(kwargs[key])
+        for (const key in this.handlers) {
+            if (!['handle', 'status', 'what'].includes(key)) {
+                const newValue = kwargs[key]
+                if (newValue !== undefined) {
+                    const h = this.handlers[key]
+                    if (h instanceof StringStateHandler) {
+                        row[key] = h.create(kwargs[key])
+                    } else {
+                        row[key] = h(kwargs[key])
+                    }
                 }
             }
         }
