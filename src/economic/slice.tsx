@@ -5,6 +5,7 @@ import { ParallelScheduleParamsKwArgs } from './model/parallel-schedule-params';
 import { CapitalExpendituresRowKwArgs } from './model/capital-expenditures';
 import { AdditionalExpendituresRowKwArgs } from './model/additional-expendures';
 import { SalaryStateKw } from './model/salary'
+import { RatesStateKw } from './model/taxes'
 
 const h = EconomicStateHandler.getInstance();
 
@@ -68,6 +69,10 @@ const economicSlice = createSlice({
     duplicateSalaryRow(state, action: PayloadAction<number>) {
       h.duplicateSalaryRow(state, action.payload)
     },
+
+    updateRates(state, action: PayloadAction<RatesStateKw>) {
+      h.updateRates(state, action.payload)
+    }
   }
 });
 

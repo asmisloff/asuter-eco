@@ -23,7 +23,7 @@ export function getStyle(status: Status): CSSProperties {
 export const StringStateInput = (props: {
   state: StringState
   label?: string
-  placeholder: string
+  placeholder?: string
   onBlur: (v: string) => void
 }) => {
   return (
@@ -36,7 +36,7 @@ export const StringStateInput = (props: {
         style={getStyle(props.state.status)}
         className={'warning'}
         title={props.state.what?.map(s => localized(s))?.join('\n') ?? ''}
-        placeholder={props.placeholder}
+        placeholder={props.placeholder ?? ''}
         onBlur={(e) => props.onBlur(e.target.value)}
       />
       {props.label && <label htmlFor="mass"> - {props.label}</label>}

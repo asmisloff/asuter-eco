@@ -12,6 +12,9 @@ import { StringStateTableHandler } from 'common/StringStateTableHandler'
 import { SalaryRowStateHandler } from './SalaryStateHandler'
 import { SalaryStateKw } from 'economic/model/salary'
 import { StringState } from 'common/StringStateHandler'
+import { RatesHandler } from './RatesHandler'
+import { RatesStateKw } from 'economic/model/taxes'
+import { IntStringStateHandler } from 'common/number-state-handler/IntStringStateHandler'
 
 export class EconomicStateHandler extends StateHandler<MeasuresEffectivenessState> {
 
@@ -21,6 +24,7 @@ export class EconomicStateHandler extends StateHandler<MeasuresEffectivenessStat
   private capitalExpendituresHandler = new CapitalExpendituresStateHandler()
   private additionalExpendituresHandler = new AdditionalExpendituresStateHandler()
   private salaryHandler = new StringStateTableHandler(new SalaryRowStateHandler())
+  readonly ratesHandler = new RatesHandler()
 
   private constructor() {
     super()
@@ -56,9 +60,9 @@ export class EconomicStateHandler extends StateHandler<MeasuresEffectivenessStat
       parallelSchedule: this.parSchHandler.create({}),
       capitalExpenditures: this.capitalExpendituresHandler.createDefault(),
       additionalExpenditures: this.additionalExpendituresHandler.createDefault(),
-      salary: this.salaryHandler.createDefault()
+      salary: this.salaryHandler.createDefault(),
+      rates: this.ratesHandler.create({})
     }
-    console.log(state)
     return state
   }
 
@@ -135,6 +139,9 @@ export class EconomicStateHandler extends StateHandler<MeasuresEffectivenessStat
     this.checkEquipmentNames(tgt, [row])
   }
 
+  updateRates(tgt: MeasuresEffectivenessState, kwargs: RatesStateKw) {
+    this.ratesHandler.update(tgt.rates, kwargs)
+  }
 
   private checkEquipmentNames(tgt: MeasuresEffectivenessState, dependentRows: { equipment: StringState }[]) {
     const equipmentNames = this.uniqueEquipmentNames('', tgt.capitalExpenditures.rows)

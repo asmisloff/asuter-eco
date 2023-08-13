@@ -1,3 +1,4 @@
+import { DEFAULT_AND_ACTUAL_VALUES_DONT_MATCH } from 'economic/const'
 import {
   StringState,
   StringStateHandler,
@@ -47,5 +48,13 @@ export class FloatStringStateHandler extends StringStateHandler {
       value = format(value, this.precision, undefined, '')
     }
     return value === tgt.value
+  }
+
+  compareToDefault(tgt: StringState, defaultValue: number | string): boolean {
+    if (tgt.value !== '' && !this.equal(tgt, defaultValue)) {
+      this.addWarning(tgt, DEFAULT_AND_ACTUAL_VALUES_DONT_MATCH)
+      return false
+    }
+    return true
   }
 }

@@ -118,7 +118,7 @@ export abstract class StringStateHandler extends StateHandler<StringState> {
 
   abstract normalized(s?: string): string
 
-  protected parseNumber(s: string): number {
+  parseNumber(s: string): number {
     s = s.replace(',', '.').replace(/\s/g, '')
     if (s == '') {
       return NaN
