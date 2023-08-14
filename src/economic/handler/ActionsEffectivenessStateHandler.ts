@@ -14,6 +14,7 @@ import { SalaryStateKw } from 'economic/model/salary'
 import { StringState } from 'common/StringStateHandler'
 import { RatesHandler } from './RatesHandler'
 import { RatesStateKw } from 'economic/model/taxes'
+import { FloatStringStateHandler } from 'common/number-state-handler/FloatStringStateHandler'
 
 export class EconomicStateHandler extends StateHandler<MeasuresEffectivenessState> {
 
@@ -52,7 +53,7 @@ export class EconomicStateHandler extends StateHandler<MeasuresEffectivenessStat
   }
 
   createDefault(): MeasuresEffectivenessState {
-    const state = {
+    const state: MeasuresEffectivenessState = {
       handle: StateHandler.cnt++,
       status: Status.Ok,
       capacity: this.capacityHandler.create({}),
@@ -63,6 +64,26 @@ export class EconomicStateHandler extends StateHandler<MeasuresEffectivenessStat
       rates: this.ratesHandler.create({})
     }
     return state
+  }
+
+  absPowerDiff(tgt: MeasuresEffectivenessState): string {
+    const sch = tgt.parallelSchedule
+    if (sch.status < Status.Error) {
+      let _old: number = 0
+      if (sch.oldDailyConsumption.value !== '') {
+        _old = this.parSchHandler.dcHandler.parseNumber(sch.oldDailyConsumption.value)
+      } else {
+        _old = sch.oldComputation!.consumption
+      }
+
+      let _new: number = 0
+      if (sch.newDailyConsumption.value !== '') {
+        _new = this.parSchHandler.dcHandler.parseNumber(sch.newDailyConsumption.value)
+      } else {
+        _new = sch.newComputation!.consumption
+      }
+    }
+    return ''
   }
 
   updateCapacityParams(tgt: MeasuresEffectivenessState, kwargs: CapacityParamsKw) {
