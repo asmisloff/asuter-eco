@@ -1,10 +1,10 @@
-import { CapitalExpendituresTableState } from 'economic/model/capital-expenditures';
-import React from 'react';
-import { StringStateInput } from './CapacityParamsView';
-import economicSlice from 'economic/slice';
-import { useAppDispatch } from 'store';
+import { CapitalExpendituresTableState } from 'economic/model/capital-expenditures'
+import React from 'react'
+import { StringStateInput } from './CapacityParamsView'
+import economicSlice from 'economic/slice'
+import { useAppDispatch } from 'store'
 
-export const CapitalExpendituresTableView = (props: { tbl: CapitalExpendituresTableState }) => {
+export function CapitalExpendituresTableView(props: { tbl: CapitalExpendituresTableState }) {
     const dispatch = useAppDispatch()
     return (
         <div>

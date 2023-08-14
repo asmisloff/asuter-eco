@@ -44,9 +44,7 @@ export const StringStateInput = (props: {
   )
 }
 
-export const CapacityParamsView = (props: {
-  capacity: CapacityParamsState
-}) => {
+export function CapacityParamsView(props: { capacity: CapacityParamsState }) {
   const {
     oldCapacityInfo,
     newCapacityInfo,

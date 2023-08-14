@@ -7,14 +7,13 @@ import { CapitalExpendituresRowKwArgs, CapitalExpendituresRowState } from '../mo
 import { CapitalExpendituresStateHandler } from 'economic/handler/CapitalExpendituresStateHandler'
 import { MeasuresEffectivenessDto, MeasuresEffectivenessState } from 'economic/model/measure-effectiveness'
 import { AdditionalExpendituresStateHandler } from './AdditionalExpenduresStateHandler'
-import { AdditionalExpendituresRowKwArgs, AdditionalExpendituresRowState } from 'economic/model/additional-expendures'
+import { AdditionalExpendituresRowKwArgs } from 'economic/model/additional-expendures'
 import { StringStateTableHandler } from 'common/StringStateTableHandler'
 import { SalaryRowStateHandler } from './SalaryStateHandler'
 import { SalaryStateKw } from 'economic/model/salary'
 import { StringState } from 'common/StringStateHandler'
 import { RatesHandler } from './RatesHandler'
 import { RatesStateKw } from 'economic/model/taxes'
-import { IntStringStateHandler } from 'common/number-state-handler/IntStringStateHandler'
 
 export class EconomicStateHandler extends StateHandler<MeasuresEffectivenessState> {
 

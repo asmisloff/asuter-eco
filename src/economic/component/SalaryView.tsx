@@ -6,7 +6,7 @@ import economicSlice from 'economic/slice'
 import { EconomicStateHandler } from 'economic/handler/ActionsEffectivenessStateHandler'
 import { CapitalExpendituresTableState } from 'economic/model/capital-expenditures'
 
-export const SalaryView = (props: { tbl: SalaryStateTable, capitalTbl: CapitalExpendituresTableState }) => {
+export function SalaryView(props: { tbl: SalaryStateTable, capitalTbl: CapitalExpendituresTableState }) {
   const dispatch = useAppDispatch()
   const h = EconomicStateHandler.getInstance()
   return (

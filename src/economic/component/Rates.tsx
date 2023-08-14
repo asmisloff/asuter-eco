@@ -1,5 +1,5 @@
 import * as taxes from 'economic/model/taxes'
-import React from 'react'
+import React, { memo } from 'react'
 import { StringStateInput } from './CapacityParamsView'
 import { EconomicStateHandler } from 'economic/handler/ActionsEffectivenessStateHandler'
 import economicSlice from 'economic/slice'
@@ -49,7 +49,7 @@ export const RatesView = (props: { rates: taxes.RatesState }) => {
         placeholder={h.ratesHandler.DEFAULT_UNIFIED_SOCIAL_TAX.toString()}
         onBlur={(v: string) => dispatch(economicSlice.actions.updateRates({ unifiedSocialTax: v }))}
       />
-      <div style={{display: 'inline-block'}}>
+      <div style={{ display: 'inline-block' }}>
         <StringStateInput
           state={props.rates.discountRate}
           label='Ставка дисконтирования, %'

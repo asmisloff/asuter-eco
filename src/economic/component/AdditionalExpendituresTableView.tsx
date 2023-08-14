@@ -6,7 +6,7 @@ import { CapitalExpendituresTableState } from 'economic/model/capital-expenditur
 import { EconomicStateHandler } from 'economic/handler/ActionsEffectivenessStateHandler'
 import React from 'react'
 
-export const AdditionalExpendituresTableView = (props: { tbl: AdditionalExpendituresTableState, capitalTbl: CapitalExpendituresTableState }) => {
+export function AdditionalExpendituresTableView(props: { tbl: AdditionalExpendituresTableState, capitalTbl: CapitalExpendituresTableState }) {
   const dispatch = useAppDispatch()
   const h = EconomicStateHandler.getInstance()
   return (

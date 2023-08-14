@@ -1,11 +1,11 @@
-import { ParallelScheduleParamsState } from 'economic/model/parallel-schedule-params';
-import { StringStateInput } from './CapacityParamsView';
-import React from 'react';
-import { useAppDispatch } from 'store';
-import economicSlice from 'economic/slice';
-import { EconomicStateHandler } from 'economic/handler/ActionsEffectivenessStateHandler';
+import { ParallelScheduleParamsState } from 'economic/model/parallel-schedule-params'
+import { StringStateInput } from './CapacityParamsView'
+import React from 'react'
+import { useAppDispatch } from 'store'
+import economicSlice from 'economic/slice'
+import { EconomicStateHandler } from 'economic/handler/ActionsEffectivenessStateHandler'
 
-export const ParallelScheduleParamsView = (props: { sch: ParallelScheduleParamsState }) => {
+export function ParallelScheduleParamsView(props: { sch: ParallelScheduleParamsState }) {
     const dispatch = useAppDispatch()
     const h = EconomicStateHandler.getInstance()
     return (
