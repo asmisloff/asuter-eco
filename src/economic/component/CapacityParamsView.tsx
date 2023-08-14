@@ -56,6 +56,8 @@ export function CapacityParamsView(props: { capacity: CapacityParamsState }) {
   } = props.capacity
   const dispatch = useAppDispatch()
   const h = EconomicStateHandler.getInstance()
+  const intervalDiff = h.intervalDiff(props.capacity)
+  const trainQtyDiff = h.trainQtyDiff(props.capacity)
   return (
     <div>
       <h2>Пропускная</h2>
@@ -133,6 +135,18 @@ export function CapacityParamsView(props: { capacity: CapacityParamsState }) {
           )
         }
       />
+
+      <div>
+        <input type="text" name="absPowerDiff" disabled value={intervalDiff.abs} />
+        <input type="text" name="relPowerDiff" disabled value={intervalDiff.rel} />
+        <label htmlFor="relPowerDiff">Изменение в межпоездном интервале</label>
+      </div>
+      <div>
+        <input type="text" name="absPowerDiff" disabled value={trainQtyDiff.abs} />
+        <input type="text" name="relPowerDiff" disabled value={trainQtyDiff.rel} />
+        <label htmlFor="relPowerDiff">Изменение в межпоездном интервале</label>
+      </div>
+
     </div>
   )
 }

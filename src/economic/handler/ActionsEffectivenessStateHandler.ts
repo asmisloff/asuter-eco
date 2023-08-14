@@ -1,7 +1,7 @@
 import { CapacityParamsStateHandler } from 'economic/handler/CapacityParamsStateHandler'
 import { StateHandler, Status } from '../../common/verifiable'
-import { CapacityParamsKw } from '../model/capacity-params'
-import { ParallelScheduleParamsKwArgs } from '../model/parallel-schedule-params'
+import { CapacityParamsKw, CapacityParamsState } from '../model/capacity-params'
+import { ParallelScheduleParamsKwArgs, ParallelScheduleParamsState } from '../model/parallel-schedule-params'
 import { ParallelScheduleParamsStateHandler } from 'economic/handler/ParallelScheduleParamsStateHandler'
 import { CapitalExpendituresRowKwArgs, CapitalExpendituresRowState } from '../model/capital-expenditures'
 import { CapitalExpendituresStateHandler } from 'economic/handler/CapitalExpendituresStateHandler'
@@ -11,7 +11,7 @@ import { AdditionalExpendituresRowKwArgs } from 'economic/model/additional-expen
 import { StringStateTableHandler } from 'common/StringStateTableHandler'
 import { SalaryRowStateHandler } from './SalaryStateHandler'
 import { SalaryStateKw } from 'economic/model/salary'
-import { StringState } from 'common/StringStateHandler'
+import { StringState, format } from 'common/StringStateHandler'
 import { RatesHandler } from './RatesHandler'
 import { RatesStateKw } from 'economic/model/taxes'
 import { FloatStringStateHandler } from 'common/number-state-handler/FloatStringStateHandler'
@@ -66,24 +66,76 @@ export class EconomicStateHandler extends StateHandler<MeasuresEffectivenessStat
     return state
   }
 
-  absPowerDiff(tgt: MeasuresEffectivenessState): string {
-    const sch = tgt.parallelSchedule
-    if (sch.status < Status.Error) {
+  powerDiff(tgt: ParallelScheduleParamsState): { abs: string, rel: string } {
+    if (tgt.status < Status.Error) {
       let _old: number = 0
-      if (sch.oldDailyConsumption.value !== '') {
-        _old = this.parSchHandler.dcHandler.parseNumber(sch.oldDailyConsumption.value)
+      if (tgt.oldDailyConsumption.value !== '') {
+        _old = this.parSchHandler.dcHandler.parseNumber(tgt.oldDailyConsumption.value)
       } else {
-        _old = sch.oldComputation!.consumption
+        _old = tgt.oldComputation!.consumption * 1440 / tgt.oldComputation!.duration
       }
 
       let _new: number = 0
-      if (sch.newDailyConsumption.value !== '') {
-        _new = this.parSchHandler.dcHandler.parseNumber(sch.newDailyConsumption.value)
+      if (tgt.newDailyConsumption.value !== '') {
+        _new = this.parSchHandler.dcHandler.parseNumber(tgt.newDailyConsumption.value)
       } else {
-        _new = sch.newComputation!.consumption
+        _new = tgt.newComputation!.consumption * 1440 / tgt.newComputation!.duration
+      }
+
+      return {
+        abs: format(_new - _old, 2, 0, '', 'always'),
+        rel: format(100 * (_new - _old) / _old, 2, 0, '', 'always') + ' %'
       }
     }
-    return ''
+    return { abs: '', rel: '' }
+  }
+
+  intervalDiff(tgt: CapacityParamsState): { abs: string, rel: string } {
+    if (tgt.newInterval.status < Status.Error && tgt.oldInterval.status < Status.Error) {
+      let _old: number = 0
+      if (tgt.oldInterval.value !== '') {
+        _old = this.parSchHandler.dcHandler.parseNumber(tgt.oldInterval.value)
+      } else {
+        _old = tgt.oldCapacityInfo!.interval
+      }
+
+      let _new: number = 0
+      if (tgt.newInterval.value !== '') {
+        _new = this.parSchHandler.dcHandler.parseNumber(tgt.newInterval.value)
+      } else {
+        _new = tgt.newCapacityInfo!.interval
+      }
+
+      return {
+        abs: format(_new - _old, 0, 0, '', 'always'),
+        rel: format(100 * (_new - _old) / _old, 2, 0, '', 'always') + ' %'
+      }
+    }
+    return { abs: '', rel: '' }
+  }
+
+  trainQtyDiff(tgt: CapacityParamsState): { abs: string, rel: string } {
+    if (tgt.newTrainQty.status < Status.Error && tgt.oldTrainQty.status < Status.Error) {
+      let _old: number = 0
+      if (tgt.oldTrainQty.value !== '') {
+        _old = this.parSchHandler.dcHandler.parseNumber(tgt.oldTrainQty.value)
+      } else {
+        _old = tgt.oldCapacityInfo!.trainQty
+      }
+
+      let _new: number = 0
+      if (tgt.newTrainQty.value !== '') {
+        _new = this.parSchHandler.dcHandler.parseNumber(tgt.newTrainQty.value)
+      } else {
+        _new = tgt.newCapacityInfo!.trainQty
+      }
+
+      return {
+        abs: format(_new - _old, 0, 0, '', 'always'),
+        rel: format(100 * (_new - _old) / _old, 2, 0, '', 'always') + ' %'
+      }
+    }
+    return { abs: '', rel: '' }
   }
 
   updateCapacityParams(tgt: MeasuresEffectivenessState, kwargs: CapacityParamsKw) {

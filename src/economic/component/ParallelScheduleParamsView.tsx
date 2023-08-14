@@ -8,6 +8,7 @@ import { EconomicStateHandler } from 'economic/handler/ActionsEffectivenessState
 export function ParallelScheduleParamsView(props: { sch: ParallelScheduleParamsState }) {
     const dispatch = useAppDispatch()
     const h = EconomicStateHandler.getInstance()
+    const powerDiff = h.powerDiff(props.sch)
     return (
         <div>
             <h2>Нагрузочная</h2>
@@ -45,6 +46,11 @@ export function ParallelScheduleParamsView(props: { sch: ParallelScheduleParamsS
                 placeholder={h.parSchHandler.defaultDailyConsumption(props.sch.newComputation)}
                 onBlur={v => dispatch(economicSlice.actions.updateParallelScheduleParams({ newDailyConsumption: v }))}
             />
+            <div>
+                <input type="text" name="absPowerDiff" disabled value={powerDiff.abs}/>
+                <input type="text" name="relPowerDiff" disabled value={powerDiff.rel}/>
+                <label htmlFor="relPowerDiff">Изменение в расходе электроэнергии</label>
+            </div>
         </div>
     )
 }

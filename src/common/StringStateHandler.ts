@@ -131,12 +131,13 @@ export function format(
   v: string | number | null | undefined,
   maxFractionDigits?: number,
   minFractionDigits?: number,
-  defaultValue: string = '-'
+  defaultValue: string = '-',
+  signDisplay: 'auto' | 'always' | 'exceptZero' | 'never' | undefined = 'auto' 
 ): string {
   if (v == null) {
     return defaultValue
   }
-  const options = { maximumFractionDigits: maxFractionDigits, minimumFractionDigits: minFractionDigits }
+  const options = { maximumFractionDigits: maxFractionDigits, minimumFractionDigits: minFractionDigits, signDisplay: signDisplay }
   if (typeof v === 'object') { // Complex
     const c = v as { re: number, im: number }
     const re = c.re.toLocaleString('ru', options)

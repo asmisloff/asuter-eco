@@ -21,14 +21,20 @@ export class ParallelScheduleParamsStateHandler extends StringStateRecordHandler
 
         if (tgt.oldComputation === null) {
             this.dcHandler.checkIsNotBlank(tgt.oldDailyConsumption)
-        } else if (tgt.oldDailyConsumption.value !== '' && !this.dcHandler.equal(tgt.oldDailyConsumption, this.defaultDailyConsumption(tgt.oldComputation))) {
-            this.dcHandler.addWarning(tgt.oldDailyConsumption, DEFAULT_AND_ACTUAL_VALUES_DONT_MATCH)
+        } else {
+            this.dcHandler.validate(tgt.oldDailyConsumption)
+            if (tgt.oldDailyConsumption.value !== '' && !this.dcHandler.equal(tgt.oldDailyConsumption, this.defaultDailyConsumption(tgt.oldComputation))) {
+                this.dcHandler.addWarning(tgt.oldDailyConsumption, DEFAULT_AND_ACTUAL_VALUES_DONT_MATCH)
+            }
         }
 
         if (tgt.newComputation === null) {
             this.dcHandler.checkIsNotBlank(tgt.newDailyConsumption)
-        } else if (tgt.newDailyConsumption.value !== '' && !this.dcHandler.equal(tgt.newDailyConsumption, this.defaultDailyConsumption(tgt.newComputation))) {
-            this.dcHandler.addWarning(tgt.newDailyConsumption, DEFAULT_AND_ACTUAL_VALUES_DONT_MATCH)
+        } else {
+            this.dcHandler.validate(tgt.newDailyConsumption)
+            if (tgt.newDailyConsumption.value !== '' && !this.dcHandler.equal(tgt.newDailyConsumption, this.defaultDailyConsumption(tgt.newComputation))) {
+                this.dcHandler.addWarning(tgt.newDailyConsumption, DEFAULT_AND_ACTUAL_VALUES_DONT_MATCH)
+            }
         }
 
         this.transferStatus(tgt, tgt.oldDailyConsumption)
