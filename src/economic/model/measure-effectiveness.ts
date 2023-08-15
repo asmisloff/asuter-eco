@@ -11,10 +11,19 @@ export interface MeasuresEffectivenessDto {
 }
 
 export interface MeasuresEffectivenessState extends Verifiable {
+    id?: number
+    name: string
+    track?: TrackParams
     capacity: CapacityParamsState
     parallelSchedule: ParallelScheduleParamsState
     capitalExpenditures: CapitalExpendituresTableState
     additionalExpenditures: AdditionalExpendituresTableState
     salary: SalaryStateTable
     rates: RatesState
+}
+
+export interface TrackParams {
+    id: number
+    name: string
+    length: string
 }

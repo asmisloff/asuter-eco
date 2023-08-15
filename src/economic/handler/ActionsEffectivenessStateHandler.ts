@@ -5,7 +5,7 @@ import { ParallelScheduleParamsKwArgs, ParallelScheduleParamsState } from '../mo
 import { ParallelScheduleParamsStateHandler } from 'economic/handler/ParallelScheduleParamsStateHandler'
 import { CapitalExpendituresRowKwArgs, CapitalExpendituresRowState } from '../model/capital-expenditures'
 import { CapitalExpendituresStateHandler } from 'economic/handler/CapitalExpendituresStateHandler'
-import { MeasuresEffectivenessDto, MeasuresEffectivenessState } from 'economic/model/measure-effectiveness'
+import { MeasuresEffectivenessDto, MeasuresEffectivenessState, TrackParams } from 'economic/model/measure-effectiveness'
 import { AdditionalExpendituresStateHandler } from './AdditionalExpenduresStateHandler'
 import { AdditionalExpendituresRowKwArgs } from 'economic/model/additional-expendures'
 import { StringStateTableHandler } from 'common/StringStateTableHandler'
@@ -14,7 +14,6 @@ import { SalaryStateKw } from 'economic/model/salary'
 import { StringState, format } from 'common/StringStateHandler'
 import { RatesHandler } from './RatesHandler'
 import { RatesStateKw } from 'economic/model/taxes'
-import { FloatStringStateHandler } from 'common/number-state-handler/FloatStringStateHandler'
 
 export class EconomicStateHandler extends StateHandler<MeasuresEffectivenessState> {
 
@@ -47,13 +46,23 @@ export class EconomicStateHandler extends StateHandler<MeasuresEffectivenessStat
 
   validate(tgt: MeasuresEffectivenessState): Status {
     this.reset(tgt)
+    this.check(tgt, tgt.track !== undefined, Status.Error, 'Необходимо выбрать участок')
     this.checkEquipmentNames(tgt, tgt.additionalExpenditures.rows)
     this.checkEquipmentNames(tgt, tgt.salary.rows)
+    this.transferStatus(tgt, tgt.capacity)
+    this.transferStatus(tgt, tgt.parallelSchedule)
+    this.transferStatus(tgt, tgt.capitalExpenditures)
+    this.transferStatus(tgt, tgt.additionalExpenditures)
+    this.transferStatus(tgt, tgt.salary)
+    this.transferStatus(tgt, tgt.rates)
     return tgt.status
   }
 
   createDefault(): MeasuresEffectivenessState {
     const state: MeasuresEffectivenessState = {
+      id: undefined,
+      name: '',
+      track: undefined,
       handle: StateHandler.cnt++,
       status: Status.Ok,
       capacity: this.capacityHandler.create({}),
@@ -63,6 +72,7 @@ export class EconomicStateHandler extends StateHandler<MeasuresEffectivenessStat
       salary: this.salaryHandler.createDefault(),
       rates: this.ratesHandler.create({})
     }
+    this.validate(state)
     return state
   }
 
@@ -138,12 +148,19 @@ export class EconomicStateHandler extends StateHandler<MeasuresEffectivenessStat
     return { abs: '', rel: '' }
   }
 
+  updateTrack(tgt: MeasuresEffectivenessState, trackParams: TrackParams) {
+    tgt.track = trackParams
+    this.validate(tgt)
+  }
+
   updateCapacityParams(tgt: MeasuresEffectivenessState, kwargs: CapacityParamsKw) {
     this.capacityHandler.update(tgt.capacity, kwargs)
+    this.validate(tgt)
   }
 
   updateParallelScheduleParams(tgt: MeasuresEffectivenessState, kwargs: ParallelScheduleParamsKwArgs) {
     this.parSchHandler.update(tgt.parallelSchedule, kwargs)
+    this.validate(tgt)
   }
 
   updateCapitalExpendituresRow(tgt: MeasuresEffectivenessState, idx: number, kwargs: CapitalExpendituresRowKwArgs) {
@@ -152,38 +169,46 @@ export class EconomicStateHandler extends StateHandler<MeasuresEffectivenessStat
       this.checkEquipmentNames(tgt, tgt.additionalExpenditures.rows)
       this.checkEquipmentNames(tgt, tgt.salary.rows)
     }
+    this.validate(tgt)
   }
 
   insertCapitalExpendituresRow(tgt: MeasuresEffectivenessState, idx: number) {
     this.capitalExpendituresHandler.insertRow(tgt.capitalExpenditures, idx, {})
+    this.validate(tgt)
   }
 
   deleteCapitalExpendituresRow(tgt: MeasuresEffectivenessState, idx: number) {
     this.capitalExpendituresHandler.deleteRow(tgt.capitalExpenditures, idx)
     this.checkEquipmentNames(tgt, tgt.additionalExpenditures.rows)
     this.checkEquipmentNames(tgt, tgt.salary.rows)
+    this.validate(tgt)
   }
 
   duplicateCapitalExpendituresRow(tgt: MeasuresEffectivenessState, idx: number) {
     this.capitalExpendituresHandler.duplicateRow(tgt.capitalExpenditures, idx)
+    this.validate(tgt)
   }
 
   updateAdditionalExpendituresRow(tgt: MeasuresEffectivenessState, idx: number, kwargs: AdditionalExpendituresRowKwArgs) {
     this.additionalExpendituresHandler.updateRow(tgt.additionalExpenditures, idx, kwargs)
+    this.validate(tgt)
   }
 
   insertAdditionalExpendituresRow(tgt: MeasuresEffectivenessState, idx: number) {
     const row = this.additionalExpendituresHandler.insertRow(tgt.additionalExpenditures, idx, {})
     this.checkEquipmentNames(tgt, [row])
+    this.validate(tgt)
   }
 
   deleteAdditionalExpendituresRow(tgt: MeasuresEffectivenessState, idx: number) {
     this.additionalExpendituresHandler.deleteRow(tgt.additionalExpenditures, idx)
+    this.validate(tgt)
   }
 
   duplicateAdditionalExpendituresRow(tgt: MeasuresEffectivenessState, idx: number) {
     const row = this.additionalExpendituresHandler.duplicateRow(tgt.additionalExpenditures, idx)
     this.checkEquipmentNames(tgt, [row])
+    this.validate(tgt)
   }
 
   uniqueEquipmentNames(current: string, arr: CapitalExpendituresRowState[]): string[] {
@@ -196,23 +221,28 @@ export class EconomicStateHandler extends StateHandler<MeasuresEffectivenessStat
   insertSalaryRow(tgt: MeasuresEffectivenessState, idx: number) {
     const row = this.salaryHandler.insertRow(tgt.salary, idx, {})
     this.checkEquipmentNames(tgt, [row])
+    this.validate(tgt)
   }
 
   updateSalaryRow(tgt: MeasuresEffectivenessState, idx: number, kwargs: SalaryStateKw) {
     this.salaryHandler.updateRow(tgt.salary, idx, kwargs)
+    this.validate(tgt)
   }
 
   deleteSalaryRow(tgt: MeasuresEffectivenessState, idx: number) {
     this.salaryHandler.deleteRow(tgt.salary, idx)
+    this.validate(tgt)
   }
 
   duplicateSalaryRow(tgt: MeasuresEffectivenessState, idx: number) {
     const row = this.salaryHandler.duplicateRow(tgt.salary, idx)
     this.checkEquipmentNames(tgt, [row])
+    this.validate(tgt)
   }
 
   updateRates(tgt: MeasuresEffectivenessState, kwargs: RatesStateKw) {
     this.ratesHandler.update(tgt.rates, kwargs)
+    this.validate(tgt)
   }
 
   private checkEquipmentNames(tgt: MeasuresEffectivenessState, dependentRows: { equipment: StringState }[]) {

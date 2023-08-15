@@ -17,6 +17,7 @@ export default function Root() {
       <MAdditionalExpendituresTableView tbl={state.additionalExpenditures} capitalTbl={state.capitalExpenditures} />
       <MSalaryView tbl={state.salary} capitalTbl={state.capitalExpenditures} />
       <MRatesView rates={state.rates} />
+      <textarea value={state.what?.join('\n')} />
     </>
   )
 }
