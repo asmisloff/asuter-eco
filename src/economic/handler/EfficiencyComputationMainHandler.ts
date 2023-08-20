@@ -11,30 +11,33 @@ import { AdditionalExpendituresRowKwArgs } from 'economic/model/additional-expen
 import { StringStateTableHandler } from 'common/StringStateTableHandler'
 import { SalaryRowStateHandler } from './SalaryStateHandler'
 import { SalaryStateKw } from 'economic/model/salary'
-import { StringState, format } from 'common/StringStateHandler'
+import { StringState, StringStateHandler, format } from 'common/StringStateHandler'
 import { RatesHandler } from './RatesHandler'
 import { RatesStateKw } from 'economic/model/taxes'
 import { EfficiencyComputationDto } from 'economic/model/dto'
+import { StringStringStateHandler } from 'common/StringStringStateHandler'
 
-export class EfficiencyComputationStateHandler extends StateHandler<EfficiencyComputationState> {
+export class EfficiencyComputationMainHandler extends StateHandler<EfficiencyComputationState> {
 
-  private static _instance?: EfficiencyComputationStateHandler = undefined
+  private static _instance?: EfficiencyComputationMainHandler = undefined
   readonly capacityHandler = new CapacityParamsStateHandler()
   readonly parSchHandler = new ParallelScheduleParamsStateHandler()
   private capitalExpendituresHandler = new CapitalExpendituresStateHandler()
   private additionalExpendituresHandler = new AdditionalExpendituresStateHandler()
   private salaryHandler = new StringStateTableHandler(new SalaryRowStateHandler())
   readonly ratesHandler = new RatesHandler()
+  private nameHandler = new StringStringStateHandler(5, 50)
+  private descriptionHandler = new StringStringStateHandler(0, 50)
 
   private constructor() {
     super()
   }
 
-  static getInstance(): EfficiencyComputationStateHandler {
-    if (!EfficiencyComputationStateHandler._instance) {
-      EfficiencyComputationStateHandler._instance = new EfficiencyComputationStateHandler()
+  static getInstance(): EfficiencyComputationMainHandler {
+    if (!EfficiencyComputationMainHandler._instance) {
+      EfficiencyComputationMainHandler._instance = new EfficiencyComputationMainHandler()
     }
-    return EfficiencyComputationStateHandler._instance
+    return EfficiencyComputationMainHandler._instance
   }
 
   fromDto(dto: EfficiencyComputationDto): EfficiencyComputationState {
@@ -42,7 +45,89 @@ export class EfficiencyComputationStateHandler extends StateHandler<EfficiencyCo
   }
 
   toDto(state: EfficiencyComputationState): EfficiencyComputationDto {
-    throw new Error('Method not implemented.')
+    if (state.status > Status.Warning) {
+      throw new Error(state.what?.join('\n'))
+    }
+    return {
+      id: state.id,
+      name: state.name.value,
+      description: state.description.value,
+      trackId: state.track!.id,
+      trackName: state.track!.name,
+      trackLength: state.track!.length,
+      capacityComputationBefore: state.capacity.oldCapacityDto ?? undefined,
+      capacityComputationAfter: state.capacity.newCapacityDto ?? undefined,
+      parallelComputationBefore: state.parallelSchedule.oldComputation ?? undefined,
+      parallelComputationAfter: state.parallelSchedule.newComputation ?? undefined,
+      inputData: {
+        trainWeightMaximum: this.tryParseNumber(state.capacity.maxTrainMass.value) ?? undefined,
+        trainIntervalBefore: this.tryParseNumber(state.capacity.oldInterval.value) ?? undefined,
+        trainIntervalAfter: this.tryParseNumber(state.capacity.newInterval.value) ?? undefined,
+        trainQtyBefore: this.tryParseNumber(state.capacity.oldTrainQty.value) ?? undefined,
+        trainQtyAfter: this.tryParseNumber(state.capacity.newTrainQty.value) ?? undefined,
+        energyConsumptionBefore: this.tryParseNumber(
+          state.parallelSchedule.oldDailyConsumption.value
+        ) ?? undefined,
+        energyConsumptionAfter: this.tryParseNumber(
+          state.parallelSchedule.newDailyConsumption.value
+        ) ?? undefined,
+        capitalInvestments: state.capitalExpenditures.rows.map(r => {
+          return {
+            equipment: r.equipment.value,
+            equipmentType: r.type.value,
+            price: this.parseNumber(r.price.value),
+            amount: this.parseNumber(r.qty.value),
+            serviceLife: this.parseNumber(r.serviceLife.value)
+          }
+        }),
+        additionalExpenditures: state.additionalExpenditures.rows.map(r => {
+          return {
+            name: r.expendureItem.value,
+            equipment: r.equipment.value,
+            amount: this.parseNumber(r.qty.value),
+            price: this.parseNumber(r.price.value),
+            type: r.period
+          }
+        }),
+        maintenanceSalaries: state.salary.rows.map(r => {
+          const hourlyRate = this.parseNumber(r.hourlyRate.value)
+          return {
+            paidWorker: r.employee.value,
+            equipmentName: r.equipment.value,
+            amount: this.parseNumber(r.qty.value),
+            hourlyRate: hourlyRate,
+            productivity: hourlyRate * 365,
+            additionalPayments: this.parseNumber(r.motivation.value)
+          }
+        }),
+        profitOptions: {
+          profitRateForCargoTurnover: this.parseNumber(state.rates.profitRateForCargoTurnover.value),
+          spendingRateForEconomicTasks: this.parseNumber(state.rates.spendingRateForEconomicTasks.value),
+          reducedEnergyConsumption: this.parseNumber(state.rates.reducedEnergyConsumption.value),
+          electricityCostPerTraction: this.parseNumber(state.rates.electricityCostPerTraction.value)
+        },
+        taxRates: {
+          incomeTax: this.tryParseNumber(state.rates.incomeTax.value)
+            ?? this.ratesHandler.DEFAULT_INCOME_TAX,
+          propertyTax: this.tryParseNumber(state.rates.propertyTax.value)
+            ?? this.ratesHandler.DEFAULT_PROPERTY_TAX,
+          unifiedSocialTax: this.tryParseNumber(state.rates.unifiedSocialTax.value)
+            ?? this.ratesHandler.DEFAULT_UNIFIED_SOCIAL_TAX
+        },
+        inflation: {
+          discountRate: this.tryParseNumber(state.rates.discountRate.value)
+            ?? this.ratesHandler.DEFAULT_DISCOUNT_RATE,
+          annualInflationRate: this.tryParseNumber(state.rates.annualInflationRate.value)
+            ?? this.ratesHandler.DEFAULT_ANNUAL_INFLATION_RATE,
+          annualSalaryIndexation: this.tryParseNumber(state.rates.annualSalaryIndexation.value)
+            ?? this.ratesHandler.DEFAULT_ANNUAL_SALARY_INDEXATION,
+          annualIncreaseInElectricityTariff: this.tryParseNumber(state.rates.annualIncreaseInElectricityTariff.value)
+            ?? this.ratesHandler.DEFAULT_ANNUAL_INCREASE_IN_ELECTRICITY_TARIFF
+        },
+        calculationPeriod: this.tryParseNumber(state.rates.calculationPeriod.value)
+          ?? this.ratesHandler.DEFAULT_CALC_PERIOD
+      }
+    }
   }
 
   validate(tgt: EfficiencyComputationState): Status {
@@ -62,8 +147,9 @@ export class EfficiencyComputationStateHandler extends StateHandler<EfficiencyCo
   createDefault(): EfficiencyComputationState {
     const state: EfficiencyComputationState = {
       id: undefined,
-      name: '',
-      track: undefined,
+      name: this.nameHandler.create(),
+      description: this.descriptionHandler.create(),
+      track: null,
       handle: StateHandler.cnt++,
       status: Status.Ok,
       capacity: this.capacityHandler.create({}),
@@ -83,14 +169,14 @@ export class EfficiencyComputationStateHandler extends StateHandler<EfficiencyCo
       if (tgt.oldDailyConsumption.value !== '') {
         _old = this.parSchHandler.dcHandler.parseNumber(tgt.oldDailyConsumption.value)
       } else {
-        _old = tgt.oldComputation!.consumption * 1440 / tgt.oldComputation!.duration
+        _old = tgt.oldComputation!.energyConsumption
       }
 
       let _new: number = 0
       if (tgt.newDailyConsumption.value !== '') {
         _new = this.parSchHandler.dcHandler.parseNumber(tgt.newDailyConsumption.value)
       } else {
-        _new = tgt.newComputation!.consumption * 1440 / tgt.newComputation!.duration
+        _new = tgt.newComputation!.energyConsumption
       }
 
       return {
@@ -107,14 +193,14 @@ export class EfficiencyComputationStateHandler extends StateHandler<EfficiencyCo
       if (tgt.oldInterval.value !== '') {
         _old = this.parSchHandler.dcHandler.parseNumber(tgt.oldInterval.value)
       } else {
-        _old = tgt.oldCapacityInfo!.interval
+        _old = tgt.oldCapacityDto!.trainInterval
       }
 
       let _new: number = 0
       if (tgt.newInterval.value !== '') {
         _new = this.parSchHandler.dcHandler.parseNumber(tgt.newInterval.value)
       } else {
-        _new = tgt.newCapacityInfo!.interval
+        _new = tgt.newCapacityDto!.trainInterval
       }
 
       return {
@@ -131,14 +217,14 @@ export class EfficiencyComputationStateHandler extends StateHandler<EfficiencyCo
       if (tgt.oldTrainQty.value !== '') {
         _old = this.parSchHandler.dcHandler.parseNumber(tgt.oldTrainQty.value)
       } else {
-        _old = tgt.oldCapacityInfo!.trainQty
+        _old = tgt.oldCapacityDto!.trainQty
       }
 
       let _new: number = 0
       if (tgt.newTrainQty.value !== '') {
         _new = this.parSchHandler.dcHandler.parseNumber(tgt.newTrainQty.value)
       } else {
-        _new = tgt.newCapacityInfo!.trainQty
+        _new = tgt.newCapacityDto!.trainQty
       }
 
       return {
@@ -149,20 +235,33 @@ export class EfficiencyComputationStateHandler extends StateHandler<EfficiencyCo
     return { abs: '', rel: '' }
   }
 
+  updateName(tgt: EfficiencyComputationState, name: string) {
+    tgt.name = this.nameHandler.create(name)
+    this.validate(tgt)
+  }
+
+  updateDescription(tgt: EfficiencyComputationState, description: string) {
+    tgt.description = this.descriptionHandler.create(description)
+    this.validate(tgt)
+  }
+
   updateTrack(tgt: EfficiencyComputationState, trackParams: TrackParams) {
     if (trackParams.id !== tgt.track?.id) {
       this.updateParallelScheduleParams(tgt, { oldComputation: null, newComputation: null })
-      this.updateCapacityParams(tgt, { oldCapacityInfo: null, newCapacityInfo: null })
+      this.updateCapacityParams(tgt, { oldCapacityDto: null, newCapacityDto: null })
     }
     tgt.track = trackParams
     this.validate(tgt)
   }
 
   updateCapacityParams(tgt: EfficiencyComputationState, kwargs: CapacityParamsKw) {
-    if (kwargs.oldCapacityInfo?.schemaId !== tgt.capacity.oldCapacityInfo?.schemaId) {
+    if ((kwargs.oldCapacityDto !== undefined || kwargs.newCapacityDto !== undefined) && tgt.track === null) {
+      throw new Error('Попытка выбора расчета пропускной способности при невыбранном участке')
+    }
+    if (kwargs.oldCapacityDto?.schemaId !== tgt.capacity.oldCapacityDto?.schemaId) {
       this.updateParallelScheduleParams(tgt, { oldComputation: null })
     }
-    if (kwargs.newCapacityInfo?.schemaId !== tgt.capacity.newCapacityInfo?.schemaId) {
+    if (kwargs.newCapacityDto?.schemaId !== tgt.capacity.newCapacityDto?.schemaId) {
       this.updateParallelScheduleParams(tgt, { newComputation: null })
     }
     this.capacityHandler.update(tgt.capacity, kwargs)
@@ -170,6 +269,12 @@ export class EfficiencyComputationStateHandler extends StateHandler<EfficiencyCo
   }
 
   updateParallelScheduleParams(tgt: EfficiencyComputationState, kwargs: ParallelScheduleParamsKwArgs) {
+    if (
+      tgt.capacity.oldCapacityDto === null && kwargs.oldComputation !== undefined ||
+      tgt.capacity.newCapacityDto === null && kwargs.newComputation !== undefined
+    ) {
+      throw new Error('Попытка выбрать расчет нагрузочной способности при невыбранном расчете пропускной способности')
+    }
     this.parSchHandler.update(tgt.parallelSchedule, kwargs)
     this.validate(tgt)
   }

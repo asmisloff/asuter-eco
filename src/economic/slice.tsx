@@ -1,13 +1,13 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { CapacityParamsKw } from './model/capacity-params';
-import { EfficiencyComputationStateHandler } from './handler/ActionsEffectivenessStateHandler';
+import { EfficiencyComputationMainHandler } from './handler/EfficiencyComputationMainHandler';
 import { ParallelScheduleParamsKwArgs } from './model/parallel-schedule-params';
 import { CapitalExpendituresRowKwArgs } from './model/capital-expenditures';
 import { AdditionalExpendituresRowKwArgs } from './model/additional-expendures';
 import { SalaryStateKw } from './model/salary'
 import { RatesStateKw } from './model/taxes'
 
-const h = EfficiencyComputationStateHandler.getInstance();
+const h = EfficiencyComputationMainHandler.getInstance();
 
 const economicSlice = createSlice({
   name: 'economic',

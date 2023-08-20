@@ -1,9 +1,10 @@
 import { Verifiable } from '../../common/verifiable'
 import { StringState } from '../../common/StringStateHandler'
+import { CapacityEconComputationDto } from './dto'
 
 export interface CapacityParamsState extends Verifiable {
-  oldCapacityInfo: CapacityInfo | null
-  newCapacityInfo: CapacityInfo | null
+  oldCapacityDto: CapacityEconComputationDto | null
+  newCapacityDto: CapacityEconComputationDto | null
   maxTrainMass: StringState
   oldInterval: StringState
   newInterval: StringState
@@ -11,18 +12,9 @@ export interface CapacityParamsState extends Verifiable {
   newTrainQty: StringState
 }
 
-export interface CapacityInfo {
-  id: number
-  schemaId: number
-  name: string
-  maxTrainMass: number
-  interval: number
-  trainQty: number
-}
-
 export interface CapacityParamsKw {
-  oldCapacityInfo?: CapacityInfo | null
-  newCapacityInfo?: CapacityInfo | null
+  oldCapacityDto?: CapacityEconComputationDto | null
+  newCapacityDto?: CapacityEconComputationDto | null
   maxTrainMass?: string
   oldInterval?: string
   newInterval?: string

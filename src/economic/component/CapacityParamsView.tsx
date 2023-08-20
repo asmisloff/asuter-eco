@@ -4,7 +4,7 @@ import { StringState, localized } from '../../common/StringStateHandler'
 import { Status } from '../../common/verifiable'
 import { useAppDispatch } from '../../store'
 import { CapacityParamsState } from '../model/capacity-params'
-import { EfficiencyComputationStateHandler } from '../handler/ActionsEffectivenessStateHandler'
+import { EfficiencyComputationMainHandler } from '../handler/EfficiencyComputationMainHandler'
 import economicSlice from '../slice'
 import './style.css'
 
@@ -46,8 +46,8 @@ export const StringStateInput = (props: {
 
 export function CapacityParamsView(props: { capacity: CapacityParamsState }) {
   const {
-    oldCapacityInfo,
-    newCapacityInfo,
+    oldCapacityDto: oldCapacityInfo,
+    newCapacityDto: newCapacityInfo,
     maxTrainMass,
     oldInterval,
     newInterval,
@@ -55,7 +55,7 @@ export function CapacityParamsView(props: { capacity: CapacityParamsState }) {
     newTrainQty
   } = props.capacity
   const dispatch = useAppDispatch()
-  const h = EfficiencyComputationStateHandler.getInstance()
+  const h = EfficiencyComputationMainHandler.getInstance()
   const intervalDiff = h.intervalDiff(props.capacity)
   const trainQtyDiff = h.trainQtyDiff(props.capacity)
   return (
@@ -66,7 +66,7 @@ export function CapacityParamsView(props: { capacity: CapacityParamsState }) {
         onBlur={(e) =>
           dispatch(
             economicSlice.actions.updateCapacityParams({
-              oldCapacityInfo: JSON.parse(e.target.value)
+              oldCapacityDto: JSON.parse(e.target.value)
             })
           )
         }
@@ -77,7 +77,7 @@ export function CapacityParamsView(props: { capacity: CapacityParamsState }) {
         onBlur={(e) =>
           dispatch(
             economicSlice.actions.updateCapacityParams({
-              newCapacityInfo: JSON.parse(e.target.value)
+              newCapacityDto: JSON.parse(e.target.value)
             })
           )
         }
@@ -98,7 +98,7 @@ export function CapacityParamsView(props: { capacity: CapacityParamsState }) {
       <StringStateInput
         state={oldInterval}
         label={'Старый интервал'}
-        placeholder={props.capacity.oldCapacityInfo?.interval?.toString() ?? ''}
+        placeholder={props.capacity.oldCapacityDto?.interval?.toString() ?? ''}
         onBlur={(v) =>
           dispatch(
             economicSlice.actions.updateCapacityParams({ oldInterval: v })
@@ -108,7 +108,7 @@ export function CapacityParamsView(props: { capacity: CapacityParamsState }) {
       <StringStateInput
         state={newInterval}
         label={'Новый интервал'}
-        placeholder={props.capacity.newCapacityInfo?.interval?.toString() ?? ''}
+        placeholder={props.capacity.newCapacityDto?.interval?.toString() ?? ''}
         onBlur={(v) =>
           dispatch(
             economicSlice.actions.updateCapacityParams({ newInterval: v })
@@ -118,7 +118,7 @@ export function CapacityParamsView(props: { capacity: CapacityParamsState }) {
       <StringStateInput
         state={oldTrainQty}
         label={'Старое количество'}
-        placeholder={props.capacity.oldCapacityInfo?.trainQty?.toString() ?? ''}
+        placeholder={props.capacity.oldCapacityDto?.trainQty?.toString() ?? ''}
         onBlur={(v) =>
           dispatch(
             economicSlice.actions.updateCapacityParams({ oldTrainQty: v })
@@ -128,7 +128,7 @@ export function CapacityParamsView(props: { capacity: CapacityParamsState }) {
       <StringStateInput
         state={newTrainQty}
         label={'Новое количество'}
-        placeholder={props.capacity.newCapacityInfo?.trainQty?.toString() ?? ''}
+        placeholder={props.capacity.newCapacityDto?.trainQty?.toString() ?? ''}
         onBlur={(v) =>
           dispatch(
             economicSlice.actions.updateCapacityParams({ newTrainQty: v })

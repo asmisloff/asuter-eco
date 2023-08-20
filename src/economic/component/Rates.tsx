@@ -1,12 +1,12 @@
 import * as taxes from 'economic/model/taxes'
 import React, { memo } from 'react'
 import { StringStateInput } from './CapacityParamsView'
-import { EfficiencyComputationStateHandler } from 'economic/handler/ActionsEffectivenessStateHandler'
+import { EfficiencyComputationMainHandler } from 'economic/handler/EfficiencyComputationMainHandler'
 import economicSlice from 'economic/slice'
 import { useAppDispatch } from 'store'
 
 export const RatesView = (props: { rates: taxes.RatesState }) => {
-  const h = EfficiencyComputationStateHandler.getInstance()
+  const h = EfficiencyComputationMainHandler.getInstance()
   const dispatch = useAppDispatch()
   return (
     <div>

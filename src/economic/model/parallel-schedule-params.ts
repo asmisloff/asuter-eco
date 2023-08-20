@@ -1,23 +1,17 @@
 import { StringState } from 'common/StringStateHandler'
 import { Verifiable } from 'common/verifiable'
+import { ParallelEconComputationDto } from './dto'
 
 export interface ParallelScheduleParamsState extends Verifiable {
-    oldComputation: ParallelScheduleInfo | null
-    newComputation: ParallelScheduleInfo | null
+    oldComputation: ParallelEconComputationDto | null
+    newComputation: ParallelEconComputationDto | null
     oldDailyConsumption: StringState
     newDailyConsumption: StringState
 }
 
 export interface ParallelScheduleParamsKwArgs {
-    oldComputation?: ParallelScheduleInfo | null
-    newComputation?: ParallelScheduleInfo | null
+    oldComputation?: ParallelEconComputationDto | null
+    newComputation?: ParallelEconComputationDto | null
     oldDailyConsumption?: string | number
     newDailyConsumption?: string | number
-}
-
-export interface ParallelScheduleInfo {
-    id: number
-    name: string
-    consumption: number
-    duration: number
 }

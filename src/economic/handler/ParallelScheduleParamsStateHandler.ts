@@ -23,7 +23,7 @@ export class ParallelScheduleParamsStateHandler extends StringStateRecordHandler
             this.dcHandler.checkIsNotBlank(tgt.oldDailyConsumption)
         } else {
             this.dcHandler.validate(tgt.oldDailyConsumption)
-            if (tgt.oldDailyConsumption.value !== '' && !this.dcHandler.equal(tgt.oldDailyConsumption, tgt.oldComputation.consumption)) {
+            if (tgt.oldDailyConsumption.value !== '' && !this.dcHandler.equal(tgt.oldDailyConsumption, tgt.oldComputation.dailyConsumption)) {
                 this.dcHandler.addWarning(tgt.oldDailyConsumption, DEFAULT_AND_ACTUAL_VALUES_DONT_MATCH)
             }
         }
@@ -32,7 +32,7 @@ export class ParallelScheduleParamsStateHandler extends StringStateRecordHandler
             this.dcHandler.checkIsNotBlank(tgt.newDailyConsumption)
         } else {
             this.dcHandler.validate(tgt.newDailyConsumption)
-            if (tgt.newDailyConsumption.value !== '' && !this.dcHandler.equal(tgt.newDailyConsumption, tgt.newComputation.consumption)) {
+            if (tgt.newDailyConsumption.value !== '' && !this.dcHandler.equal(tgt.newDailyConsumption, tgt.newComputation.dailyConsumption)) {
                 this.dcHandler.addWarning(tgt.newDailyConsumption, DEFAULT_AND_ACTUAL_VALUES_DONT_MATCH)
             }
         }

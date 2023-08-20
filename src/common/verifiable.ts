@@ -108,4 +108,20 @@ export abstract class StateHandler<S extends Verifiable> {
     tgt.status = Status.Ok;
     delete tgt.what;
   }
+
+  parseNumber(s: string): number {
+    s = s.replace(',', '.').replace(/\s/g, '')
+    if (s == '') {
+      return NaN
+    }
+    return +s
+  }
+
+  tryParseNumber(s: string): number | null {
+    const n = this.parseNumber(s)
+    if (isNaN(n)) {
+      return null
+    }
+    return n
+  }
 }

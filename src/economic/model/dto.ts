@@ -69,7 +69,7 @@ export interface CapacityEconComputationDto {
     /** Масса поезда наибольшая т */
     trainWeightMaximum: number
     /** Межпоездной интервал мин */
-    trainnumbererval: number
+    trainInterval: number
     /** Число поездов шт */
     trainQty: number
 }
@@ -98,15 +98,15 @@ export interface ParallelEconComputationDto {
  */
 export interface EfficiencyInputDto {
     trainWeightMaximum?: number
-    trainnumberervalBefore?: number
-    trainnumberervalAfter?: number
+    trainIntervalBefore?: number
+    trainIntervalAfter?: number
     trainQtyBefore?: number
     trainQtyAfter?: number
     energyConsumptionBefore?: number
     energyConsumptionAfter?: number
     capitalInvestments: Array<CapitalInvestmentsEntry>
     additionalExpenditures: Array<AdditionalExpendituresEntry>
-    manumberenanceSalaries: Array<MaintenanceSalariesEntry>
+    maintenanceSalaries: Array<MaintenanceSalariesEntry>
     profitOptions: ProfitCalculationOptions
     taxRates: TaxRates
     inflation: InflationRates
@@ -239,7 +239,7 @@ export interface InflationRates {
 }
 
 /** Характер расходов. */
-type ExpenditureType = 
+export type ExpenditureType = 
     | 'ONETIME' // Единовременные расходы
     | 'ANNUAL' // Ежегодные расходы
 

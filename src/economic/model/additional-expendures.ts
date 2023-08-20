@@ -1,12 +1,13 @@
 import { StringState } from 'common/StringStateHandler'
 import { Verifiable } from 'common/verifiable'
+import { ExpenditureType } from './dto'
 
 export interface AdditionalExpendituresRowDto {
     expendureItem: string,
     equipment: string,
     price: number,
     qty: number,
-    period: 'OneTime' | 'Yearly'
+    period: ExpenditureType
 }
 
 export interface AdditionalExpendituresRowState extends Verifiable {
@@ -14,7 +15,7 @@ export interface AdditionalExpendituresRowState extends Verifiable {
     equipment: StringState,
     price: StringState,
     qty: StringState,
-    period: 'OneTime' | 'Yearly'
+    period: ExpenditureType
 }
 
 export interface AdditionalExpendituresTableState extends Verifiable {
@@ -26,5 +27,5 @@ export type AdditionalExpendituresRowKwArgs = Partial<{
     equipment: string,
     price: string | number,
     qty: string | number,
-    period: 'OneTime' | 'Yearly'
+    period: ExpenditureType
 }>

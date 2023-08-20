@@ -3,12 +3,12 @@ import economicSlice from 'economic/slice'
 import { useAppDispatch } from 'store'
 import { AdditionalExpendituresTableState } from 'economic/model/additional-expendures'
 import { CapitalExpendituresTableState } from 'economic/model/capital-expenditures'
-import { EfficiencyComputationStateHandler } from 'economic/handler/ActionsEffectivenessStateHandler'
+import { EfficiencyComputationMainHandler } from 'economic/handler/EfficiencyComputationMainHandler'
 import React from 'react'
 
 export function AdditionalExpendituresTableView(props: { tbl: AdditionalExpendituresTableState, capitalTbl: CapitalExpendituresTableState }) {
   const dispatch = useAppDispatch()
-  const h = EfficiencyComputationStateHandler.getInstance()
+  const h = EfficiencyComputationMainHandler.getInstance()
   return (
     <div>
       <h2>Дополнительные затраты</h2>
@@ -73,9 +73,9 @@ export function AdditionalExpendituresTableView(props: { tbl: AdditionalExpendit
                   <input
                     type='radio'
                     name={`${row.handle}`}
-                    value='OneTime'
-                    checked={row.period === 'OneTime'}
-                    onClick={v => dispatch(economicSlice.actions.updateAdditionalExpendituresRow({ idx, period: 'OneTime' }))}
+                    value='ONETIME'
+                    checked={row.period === 'ONETIME'}
+                    onClick={v => dispatch(economicSlice.actions.updateAdditionalExpendituresRow({ idx, period: 'ONETIME' }))}
                     readOnly
                   />
                 </td>
@@ -83,9 +83,9 @@ export function AdditionalExpendituresTableView(props: { tbl: AdditionalExpendit
                   <input
                     type='radio'
                     name={`${row.handle}`}
-                    value='Yearly'
-                    checked={row.period === 'Yearly'}
-                    onClick={v => dispatch(economicSlice.actions.updateAdditionalExpendituresRow({ idx, period: 'Yearly' }))}
+                    value='ANNUAL'
+                    checked={row.period === 'ANNUAL'}
+                    onClick={v => dispatch(economicSlice.actions.updateAdditionalExpendituresRow({ idx, period: 'ANNUAL' }))}
                     readOnly
                   />
                 </td>

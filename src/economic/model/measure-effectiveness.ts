@@ -5,11 +5,13 @@ import { ParallelScheduleParamsState } from './parallel-schedule-params'
 import { AdditionalExpendituresTableState } from './additional-expendures'
 import { SalaryStateTable } from './salary'
 import { RatesState } from './taxes'
+import { StringState } from 'common/StringStateHandler'
 
 export interface EfficiencyComputationState extends Verifiable {
     id?: number
-    name: string
-    track?: TrackParams
+    name: StringState
+    description: StringState
+    track: TrackParams | null
     capacity: CapacityParamsState
     parallelSchedule: ParallelScheduleParamsState
     capitalExpenditures: CapitalExpendituresTableState
@@ -21,5 +23,5 @@ export interface EfficiencyComputationState extends Verifiable {
 export interface TrackParams {
     id: number
     name: string
-    length: string
+    length: number
 }

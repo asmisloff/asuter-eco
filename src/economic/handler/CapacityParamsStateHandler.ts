@@ -3,7 +3,8 @@ import { StringStateRecordHandler } from 'common/StringStateRecordHandler'
 import { FloatStringStateHandler } from 'common/number-state-handler/FloatStringStateHandler'
 import { Status } from 'common/verifiable'
 import { DEFAULT_AND_ACTUAL_VALUES_DONT_MATCH } from 'economic/const'
-import { CapacityParamsState, CapacityParamsKw, CapacityInfo } from 'economic/model/capacity-params'
+import { CapacityParamsState, CapacityParamsKw } from 'economic/model/capacity-params'
+import { CapacityEconComputationDto } from 'economic/model/dto'
 
 export class CapacityParamsStateHandler extends StringStateRecordHandler<CapacityParamsState, CapacityParamsKw> {
   private massHandler = new FloatStringStateHandler(0, 110e3, 3, false)
@@ -11,8 +12,8 @@ export class CapacityParamsStateHandler extends StringStateRecordHandler<Capacit
   private trainQtyHandler = new FloatStringStateHandler(0, 1000, 1, false)
 
   readonly handlers: Record<keyof CapacityParamsKw, StringStateHandler | ((arg?: any) => any)> = {
-    oldCapacityInfo: (v: CapacityInfo) => v === undefined ? null : v,
-    newCapacityInfo: (v: CapacityInfo) => v === undefined ? null : v,
+    oldCapacityDto: (v: CapacityEconComputationDto) => v === undefined ? null : v,
+    newCapacityDto: (v: CapacityEconComputationDto) => v === undefined ? null : v,
     maxTrainMass: this.massHandler,
     oldInterval: this.intervalHandler,
     newInterval: this.intervalHandler,
@@ -21,35 +22,35 @@ export class CapacityParamsStateHandler extends StringStateRecordHandler<Capacit
   }
 
   validate(tgt: CapacityParamsState): Status {
-    if (tgt.oldCapacityInfo === null) {
+    if (tgt.oldCapacityDto === null) {
       this.intervalHandler.checkIsNotBlank(tgt.oldInterval)
       this.trainQtyHandler.checkIsNotBlank(tgt.oldTrainQty)
     } else {
       this.intervalHandler.validate(tgt.oldInterval)
       this.trainQtyHandler.validate(tgt.oldTrainQty)
-      if (tgt.oldInterval.value !== '' && !this.intervalHandler.equal(tgt.oldInterval, tgt.oldCapacityInfo.interval)) {
+      if (tgt.oldInterval.value !== '' && !this.intervalHandler.equal(tgt.oldInterval, tgt.oldCapacityDto.trainInterval)) {
         this.intervalHandler.addWarning(tgt.oldInterval, DEFAULT_AND_ACTUAL_VALUES_DONT_MATCH)
       }
-      if (tgt.oldTrainQty.value !== '' && !this.trainQtyHandler.equal(tgt.oldTrainQty, tgt.oldCapacityInfo.trainQty)) {
+      if (tgt.oldTrainQty.value !== '' && !this.trainQtyHandler.equal(tgt.oldTrainQty, tgt.oldCapacityDto.trainQty)) {
         this.trainQtyHandler.addWarning(tgt.oldTrainQty, DEFAULT_AND_ACTUAL_VALUES_DONT_MATCH)
       }
     }
 
-    if (tgt.newCapacityInfo === null) {
+    if (tgt.newCapacityDto === null) {
       this.intervalHandler.checkIsNotBlank(tgt.newInterval)
       this.trainQtyHandler.checkIsNotBlank(tgt.newTrainQty)
     } else {
       this.intervalHandler.validate(tgt.newInterval)
       this.trainQtyHandler.validate(tgt.newTrainQty)
-      if (tgt.newInterval.value !== '' && !this.intervalHandler.equal(tgt.newInterval, tgt.newCapacityInfo.interval)) {
+      if (tgt.newInterval.value !== '' && !this.intervalHandler.equal(tgt.newInterval, tgt.newCapacityDto.trainInterval)) {
         this.intervalHandler.addWarning(tgt.newInterval, DEFAULT_AND_ACTUAL_VALUES_DONT_MATCH)
       }
-      if (tgt.newTrainQty.value !== '' && !this.trainQtyHandler.equal(tgt.newTrainQty, tgt.newCapacityInfo.trainQty)) {
+      if (tgt.newTrainQty.value !== '' && !this.trainQtyHandler.equal(tgt.newTrainQty, tgt.newCapacityDto.trainQty)) {
         this.trainQtyHandler.addWarning(tgt.newTrainQty, DEFAULT_AND_ACTUAL_VALUES_DONT_MATCH)
       }
     }
 
-    if (tgt.oldCapacityInfo === null && tgt.newCapacityInfo === null) {
+    if (tgt.oldCapacityDto === null && tgt.newCapacityDto === null) {
       this.massHandler.checkIsNotBlank(tgt.maxTrainMass)
     } else {
       this.massHandler.validate(tgt.maxTrainMass)
@@ -62,9 +63,9 @@ export class CapacityParamsStateHandler extends StringStateRecordHandler<Capacit
   }
 
   defaultMass(tgt: CapacityParamsState): string {
-    if (tgt.oldCapacityInfo == null && tgt.newCapacityInfo == null) {
+    if (tgt.oldCapacityDto == null && tgt.newCapacityDto == null) {
       return ''
     }
-    return this.massHandler.normalized(Math.max(tgt.oldCapacityInfo?.maxTrainMass ?? 0, tgt.newCapacityInfo?.maxTrainMass ?? 0).toString())
+    return this.massHandler.normalized(Math.max(tgt.oldCapacityDto?.trainWeightMaximum ?? 0, tgt.newCapacityDto?.trainWeightMaximum ?? 0).toString())
   }
 }

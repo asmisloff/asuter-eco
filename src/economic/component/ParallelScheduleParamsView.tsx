@@ -3,11 +3,11 @@ import { StringStateInput } from './CapacityParamsView'
 import React from 'react'
 import { useAppDispatch } from 'store'
 import economicSlice from 'economic/slice'
-import { EfficiencyComputationStateHandler } from 'economic/handler/ActionsEffectivenessStateHandler'
+import { EfficiencyComputationMainHandler } from 'economic/handler/EfficiencyComputationMainHandler'
 
 export function ParallelScheduleParamsView(props: { sch: ParallelScheduleParamsState }) {
     const dispatch = useAppDispatch()
-    const h = EfficiencyComputationStateHandler.getInstance()
+    const h = EfficiencyComputationMainHandler.getInstance()
     const powerDiff = h.powerDiff(props.sch)
     return (
         <div>
@@ -37,13 +37,13 @@ export function ParallelScheduleParamsView(props: { sch: ParallelScheduleParamsS
             <StringStateInput
                 state={props.sch.oldDailyConsumption}
                 label={'Старое суточное потербление'}
-                placeholder={props.sch.oldComputation?.consumption?.toString() ?? ''}
+                placeholder={props.sch.oldComputation?.dailyConsumption?.toString() ?? ''}
                 onBlur={v => dispatch(economicSlice.actions.updateParallelScheduleParams({ oldDailyConsumption: v }))}
             />
             <StringStateInput
                 state={props.sch.newDailyConsumption}
                 label={'Новое суточное потербление'}
-                placeholder={props.sch.newComputation?.consumption?.toString() ?? ''}
+                placeholder={props.sch.newComputation?.dailyConsumption?.toString() ?? ''}
                 onBlur={v => dispatch(economicSlice.actions.updateParallelScheduleParams({ newDailyConsumption: v }))}
             />
             <div>
