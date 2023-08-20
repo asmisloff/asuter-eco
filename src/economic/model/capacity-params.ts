@@ -13,25 +13,16 @@ export interface CapacityParamsState extends Verifiable {
 
 export interface CapacityInfo {
   id: number
+  schemaId: number
   name: string
   maxTrainMass: number
   interval: number
   trainQty: number
 }
 
-export interface CapacityParamsDto {
-  oldCapacityId?: CapacityInfo
-  newCapacityId?: CapacityInfo
-  maxTrainMass?: number
-  oldInterval?: number
-  newInterval?: number
-  oldTrainQty?: number
-  newTrainQty?: number
-}
-
 export interface CapacityParamsKw {
-  oldCapacityInfo?: CapacityInfo
-  newCapacityInfo?: CapacityInfo
+  oldCapacityInfo?: CapacityInfo | null
+  newCapacityInfo?: CapacityInfo | null
   maxTrainMass?: string
   oldInterval?: string
   newInterval?: string

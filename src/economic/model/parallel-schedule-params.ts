@@ -8,16 +8,9 @@ export interface ParallelScheduleParamsState extends Verifiable {
     newDailyConsumption: StringState
 }
 
-export interface ParallelScheduleParamsDto {
-    oldComputaion?: ParallelScheduleInfo
-    newComputation?: ParallelScheduleInfo
-    oldDailyConsumption?: number
-    newDailyConsumption?: number
-}
-
 export interface ParallelScheduleParamsKwArgs {
-    oldComputation?: ParallelScheduleInfo
-    newComputation?: ParallelScheduleInfo
+    oldComputation?: ParallelScheduleInfo | null
+    newComputation?: ParallelScheduleInfo | null
     oldDailyConsumption?: string | number
     newDailyConsumption?: string | number
 }

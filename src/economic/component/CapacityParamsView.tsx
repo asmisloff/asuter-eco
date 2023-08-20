@@ -4,7 +4,7 @@ import { StringState, localized } from '../../common/StringStateHandler'
 import { Status } from '../../common/verifiable'
 import { useAppDispatch } from '../../store'
 import { CapacityParamsState } from '../model/capacity-params'
-import { EconomicStateHandler } from '../handler/ActionsEffectivenessStateHandler'
+import { EfficiencyComputationStateHandler } from '../handler/ActionsEffectivenessStateHandler'
 import economicSlice from '../slice'
 import './style.css'
 
@@ -55,7 +55,7 @@ export function CapacityParamsView(props: { capacity: CapacityParamsState }) {
     newTrainQty
   } = props.capacity
   const dispatch = useAppDispatch()
-  const h = EconomicStateHandler.getInstance()
+  const h = EfficiencyComputationStateHandler.getInstance()
   const intervalDiff = h.intervalDiff(props.capacity)
   const trainQtyDiff = h.trainQtyDiff(props.capacity)
   return (

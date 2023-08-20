@@ -3,12 +3,12 @@ import economicSlice from 'economic/slice'
 import { useAppDispatch } from 'store'
 import { AdditionalExpendituresTableState } from 'economic/model/additional-expendures'
 import { CapitalExpendituresTableState } from 'economic/model/capital-expenditures'
-import { EconomicStateHandler } from 'economic/handler/ActionsEffectivenessStateHandler'
+import { EfficiencyComputationStateHandler } from 'economic/handler/ActionsEffectivenessStateHandler'
 import React from 'react'
 
 export function AdditionalExpendituresTableView(props: { tbl: AdditionalExpendituresTableState, capitalTbl: CapitalExpendituresTableState }) {
   const dispatch = useAppDispatch()
-  const h = EconomicStateHandler.getInstance()
+  const h = EfficiencyComputationStateHandler.getInstance()
   return (
     <div>
       <h2>Дополнительные затраты</h2>

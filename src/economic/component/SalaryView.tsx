@@ -3,12 +3,12 @@ import { useAppDispatch } from 'store'
 import React from 'react'
 import { StringStateInput, getStyle } from './CapacityParamsView'
 import economicSlice from 'economic/slice'
-import { EconomicStateHandler } from 'economic/handler/ActionsEffectivenessStateHandler'
+import { EfficiencyComputationStateHandler } from 'economic/handler/ActionsEffectivenessStateHandler'
 import { CapitalExpendituresTableState } from 'economic/model/capital-expenditures'
 
 export function SalaryView(props: { tbl: SalaryStateTable, capitalTbl: CapitalExpendituresTableState }) {
   const dispatch = useAppDispatch()
-  const h = EconomicStateHandler.getInstance()
+  const h = EfficiencyComputationStateHandler.getInstance()
   return (
     <div>
       <h2>Оплата труда</h2>

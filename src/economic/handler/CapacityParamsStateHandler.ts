@@ -1,9 +1,9 @@
 import { StringStateHandler } from 'common/StringStateHandler'
 import { StringStateRecordHandler } from 'common/StringStateRecordHandler'
 import { FloatStringStateHandler } from 'common/number-state-handler/FloatStringStateHandler'
-import { StateHandler, Status, Verifiable } from 'common/verifiable'
+import { Status } from 'common/verifiable'
 import { DEFAULT_AND_ACTUAL_VALUES_DONT_MATCH } from 'economic/const'
-import { CapacityParamsDto, CapacityParamsState, CapacityParamsKw, CapacityInfo } from 'economic/model/capacity-params'
+import { CapacityParamsState, CapacityParamsKw, CapacityInfo } from 'economic/model/capacity-params'
 
 export class CapacityParamsStateHandler extends StringStateRecordHandler<CapacityParamsState, CapacityParamsKw> {
   private massHandler = new FloatStringStateHandler(0, 110e3, 3, false)

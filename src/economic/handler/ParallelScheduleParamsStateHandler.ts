@@ -23,7 +23,7 @@ export class ParallelScheduleParamsStateHandler extends StringStateRecordHandler
             this.dcHandler.checkIsNotBlank(tgt.oldDailyConsumption)
         } else {
             this.dcHandler.validate(tgt.oldDailyConsumption)
-            if (tgt.oldDailyConsumption.value !== '' && !this.dcHandler.equal(tgt.oldDailyConsumption, this.defaultDailyConsumption(tgt.oldComputation))) {
+            if (tgt.oldDailyConsumption.value !== '' && !this.dcHandler.equal(tgt.oldDailyConsumption, tgt.oldComputation.consumption)) {
                 this.dcHandler.addWarning(tgt.oldDailyConsumption, DEFAULT_AND_ACTUAL_VALUES_DONT_MATCH)
             }
         }
@@ -32,7 +32,7 @@ export class ParallelScheduleParamsStateHandler extends StringStateRecordHandler
             this.dcHandler.checkIsNotBlank(tgt.newDailyConsumption)
         } else {
             this.dcHandler.validate(tgt.newDailyConsumption)
-            if (tgt.newDailyConsumption.value !== '' && !this.dcHandler.equal(tgt.newDailyConsumption, this.defaultDailyConsumption(tgt.newComputation))) {
+            if (tgt.newDailyConsumption.value !== '' && !this.dcHandler.equal(tgt.newDailyConsumption, tgt.newComputation.consumption)) {
                 this.dcHandler.addWarning(tgt.newDailyConsumption, DEFAULT_AND_ACTUAL_VALUES_DONT_MATCH)
             }
         }
@@ -40,12 +40,5 @@ export class ParallelScheduleParamsStateHandler extends StringStateRecordHandler
         this.transferStatus(tgt, tgt.oldDailyConsumption)
         this.transferStatus(tgt, tgt.newDailyConsumption)
         return tgt.status
-    }
-
-    defaultDailyConsumption(schInfo: ParallelScheduleInfo | null): string {
-        if (schInfo) {
-            return this.dcHandler.normalized((schInfo.consumption * 1440 / schInfo.duration).toString())
-        }
-        return ''
     }
 }
