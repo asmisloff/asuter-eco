@@ -4,7 +4,7 @@ import { StringStateInput } from './CapacityParamsView'
 import economicSlice from 'economic/slice'
 import { useAppDispatch } from 'store'
 
-export function CapitalExpendituresTableView(props: { tbl: CapitalExpendituresTableState }) {
+export function CapitalExpendituresView(props: { tbl: CapitalExpendituresTableState }) {
     const dispatch = useAppDispatch()
     return (
         <div>

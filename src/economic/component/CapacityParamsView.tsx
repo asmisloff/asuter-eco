@@ -6,7 +6,6 @@ import { useAppDispatch } from '../../store'
 import { CapacityParamsState } from '../model/capacity-params'
 import { EfficiencyComputationMainHandler } from '../handler/EfficiencyComputationMainHandler'
 import economicSlice from '../slice'
-import './style.css'
 
 export function getStyle(status: Status): CSSProperties {
   let color = ''

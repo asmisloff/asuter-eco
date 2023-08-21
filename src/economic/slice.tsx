@@ -6,6 +6,7 @@ import { CapitalExpendituresRowKwArgs } from './model/capital-expenditures';
 import { AdditionalExpendituresRowKwArgs } from './model/additional-expendures';
 import { SalaryStateKw } from './model/salary'
 import { RatesStateKw } from './model/taxes'
+import { TrackParams } from './model/measure-effectiveness';
 
 const h = EfficiencyComputationMainHandler.getInstance();
 
@@ -13,6 +14,18 @@ const economicSlice = createSlice({
   name: 'economic',
   initialState: h.createDefault(),
   reducers: {
+    updateName(state, action: PayloadAction<string>) {
+      h.updateName(state, action.payload)
+    },
+
+    updateDescription(state, action: PayloadAction<string>) {
+      h.updateDescription(state, action.payload)
+    },
+
+    updateTrack(state, action: PayloadAction<TrackParams>) {
+      h.updateTrack(state, action.payload)
+    },
+
     updateCapacityParams(state, action: PayloadAction<CapacityParamsKw>) {
       h.updateCapacityParams(state, action.payload);
     },

@@ -12,7 +12,7 @@ import { StringStateTableHandler } from 'common/StringStateTableHandler'
 import { SalaryRowStateHandler } from './SalaryStateHandler'
 import { SalaryStateKw } from 'economic/model/salary'
 import { StringState, StringStateHandler, format } from 'common/StringStateHandler'
-import { RatesHandler } from './RatesHandler'
+import { RatesStateHandler } from './RatesStateHandler'
 import { RatesStateKw } from 'economic/model/taxes'
 import { EfficiencyComputationDto, EfficiencyInputDto } from 'economic/model/dto'
 import { StringStringStateHandler } from 'common/StringStringStateHandler'
@@ -26,7 +26,7 @@ export class EfficiencyComputationMainHandler extends StateHandler<EfficiencyCom
   private capitalExpendituresHandler = new CapitalExpendituresStateHandler()
   private additionalExpendituresHandler = new AdditionalExpendituresStateHandler()
   private salaryHandler = new StringStateTableHandler(new SalaryRowStateHandler())
-  readonly ratesHandler = new RatesHandler()
+  readonly ratesHandler = new RatesStateHandler()
   private nameHandler = new StringStringStateHandler(5, 50)
   private descriptionHandler = new StringStringStateHandler(0, 50)
 
@@ -359,8 +359,8 @@ export class EfficiencyComputationMainHandler extends StateHandler<EfficiencyCom
     this.validate(tgt)
   }
 
-  updateTrack(tgt: EfficiencyComputationState, trackParams: TrackParams) {
-    if (trackParams.id !== tgt.track?.id) {
+  updateTrack(tgt: EfficiencyComputationState, trackParams: TrackParams | null) {
+    if (trackParams?.id !== tgt.track?.id) {
       this.updateParallelScheduleParams(tgt, { oldComputation: null, newComputation: null })
       this.updateCapacityParams(tgt, { oldCapacityDto: null, newCapacityDto: null })
     }

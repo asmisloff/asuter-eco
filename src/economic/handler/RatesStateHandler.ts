@@ -5,7 +5,7 @@ import { IntStringStateHandler } from 'common/number-state-handler/IntStringStat
 import { Status } from 'common/verifiable'
 import { RatesState, RatesStateKw } from 'economic/model/taxes'
 
-export class RatesHandler extends StringStateRecordHandler<RatesState, RatesStateKw> {
+export class RatesStateHandler extends StringStateRecordHandler<RatesState, RatesStateKw> {
 
     readonly DEFAULT_INCOME_TAX = 20.0
     readonly DEFAULT_PROPERTY_TAX = 2.2
