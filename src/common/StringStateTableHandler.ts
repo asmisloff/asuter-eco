@@ -33,8 +33,14 @@ export class StringStateTableHandler<R extends Verifiable, K extends Record<stri
         return instance
     }
 
-    insertRow(tgt: StringStateTable<R>, idx: number, kwargs: K): R {
+    insertRow(tgt: StringStateTable<R>, idx: number | null, kwargs: K): R {
         const row = this.rowHandler.create(kwargs)
+        if (idx === null) {
+            idx = tgt.rows.length
+        }
+        if (idx < 0) {
+            idx += tgt.rows.length
+        }
         tgt.rows.splice(idx, 0, row)
         tgt.rows = tgt.rows.slice()
         this.validate(tgt)

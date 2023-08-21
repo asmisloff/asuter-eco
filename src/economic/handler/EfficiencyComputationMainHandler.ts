@@ -14,8 +14,9 @@ import { SalaryStateKw } from 'economic/model/salary'
 import { StringState, StringStateHandler, format } from 'common/StringStateHandler'
 import { RatesHandler } from './RatesHandler'
 import { RatesStateKw } from 'economic/model/taxes'
-import { EfficiencyComputationDto } from 'economic/model/dto'
+import { EfficiencyComputationDto, EfficiencyInputDto } from 'economic/model/dto'
 import { StringStringStateHandler } from 'common/StringStringStateHandler'
+import { ANY_REQUIRED_VALUES_ARE_MISSED, MAX_SYMBOL_QTY, VALUE_IS_REQUIRED } from 'economic/const'
 
 export class EfficiencyComputationMainHandler extends StateHandler<EfficiencyComputationState> {
 
@@ -38,10 +39,6 @@ export class EfficiencyComputationMainHandler extends StateHandler<EfficiencyCom
       EfficiencyComputationMainHandler._instance = new EfficiencyComputationMainHandler()
     }
     return EfficiencyComputationMainHandler._instance
-  }
-
-  fromDto(dto: EfficiencyComputationDto): EfficiencyComputationState {
-    throw new Error('Method not implemented.')
   }
 
   toDto(state: EfficiencyComputationState): EfficiencyComputationDto {
@@ -130,11 +127,114 @@ export class EfficiencyComputationMainHandler extends StateHandler<EfficiencyCom
     }
   }
 
+  fromDto(dto: EfficiencyComputationDto): EfficiencyComputationState {
+    const capitalExpenditures = this.capitalExpendituresHandler.createDefault()
+    for (const row of dto.inputData.capitalInvestments) {
+      this.capitalExpendituresHandler.insertRow(
+        capitalExpenditures,
+        null,
+        {
+          equipment: row.equipment,
+          price: row.price,
+          qty: row.amount,
+          serviceLife: row.serviceLife,
+          type: row.equipmentType
+        }
+      )
+    }
+
+    const additionalExpenditures = this.additionalExpendituresHandler.createDefault()
+    for (const row of dto.inputData.additionalExpenditures) {
+      this.additionalExpendituresHandler.insertRow(
+        additionalExpenditures,
+        null,
+        {
+          equipment: row.equipment,
+          expendureItem: row.name,
+          period: row.type,
+          price: row.price,
+          qty: row.amount
+        }
+      )
+    }
+
+    const salary = this.salaryHandler.createDefault()
+    for (const row of dto.inputData.maintenanceSalaries) {
+      this.salaryHandler.insertRow(
+        salary,
+        null,
+        {
+          employee: row.paidWorker,
+          equipment: row.equipmentName,
+          qty: row.amount,
+          hourlyRate: row.hourlyRate,
+          annualOutput: row.productivity,
+          motivation: row.additionalPayments
+        }
+      )
+    }
+
+    const state: EfficiencyComputationState = {
+      handle: StateHandler.cnt++,
+      status: Status.Ok,
+      id: dto.id,
+      name: this.nameHandler.create(dto.name),
+      description: this.descriptionHandler.create(dto.description),
+      track: {
+        id: dto.trackId,
+        name: dto.trackName,
+        length: dto.trackLength
+      },
+      capacity: this.capacityHandler.create({
+        oldCapacityDto: dto.capacityComputationBefore,
+        newCapacityDto: dto.capacityComputationAfter,
+        maxTrainMass: dto.inputData.trainWeightMaximum?.toString(),
+        oldInterval: dto.inputData.trainIntervalBefore?.toString(),
+        newInterval: dto.inputData.trainIntervalAfter?.toString(),
+        oldTrainQty: dto.inputData.trainQtyBefore?.toString(),
+        newTrainQty: dto.inputData.trainQtyAfter?.toString()
+      }),
+      parallelSchedule: this.parSchHandler.create({
+        oldComputation: dto.parallelComputationBefore,
+        newComputation: dto.parallelComputationAfter,
+        oldDailyConsumption: dto.inputData.energyConsumptionBefore?.toString(),
+        newDailyConsumption: dto.inputData.energyConsumptionAfter?.toString()
+      }),
+      capitalExpenditures: capitalExpenditures,
+      additionalExpenditures: additionalExpenditures,
+      salary: salary,
+      rates: this.ratesHandler.create({
+        profitRateForCargoTurnover: dto.inputData.profitOptions.profitRateForCargoTurnover,
+        spendingRateForEconomicTasks: dto.inputData.profitOptions.spendingRateForEconomicTasks,
+        reducedEnergyConsumption: dto.inputData.profitOptions.reducedEnergyConsumption,
+        electricityCostPerTraction: dto.inputData.profitOptions.electricityCostPerTraction,
+        incomeTax: dto.inputData.taxRates.incomeTax,
+        propertyTax: dto.inputData.taxRates.propertyTax,
+        unifiedSocialTax: dto.inputData.taxRates.unifiedSocialTax,
+        discountRate: dto.inputData.inflation.discountRate,
+        annualInflationRate: dto.inputData.inflation.annualInflationRate,
+        annualSalaryIndexation: dto.inputData.inflation.annualSalaryIndexation,
+        annualIncreaseInElectricityTariff: dto.inputData.inflation.annualIncreaseInElectricityTariff,
+        calculationPeriod: dto.inputData.calculationPeriod
+      })
+    }
+    this.validate(state)
+    return state
+  }
+
   validate(tgt: EfficiencyComputationState): Status {
     this.reset(tgt)
-    this.check(tgt, tgt.track !== undefined, Status.Error, 'Необходимо выбрать участок')
+    this.check(tgt, tgt.track !== null, Status.Error, 'Необходимо выбрать участок')
+    this.check(
+      tgt,
+      tgt.capitalExpenditures.rows.length > 0 || tgt.additionalExpenditures.rows.length > 0 || tgt.salary.rows.length > 0,
+      Status.Error,
+      'Необходимо ввести хотя бы одну строку затрат'
+    )
     this.checkEquipmentNames(tgt, tgt.additionalExpenditures.rows)
     this.checkEquipmentNames(tgt, tgt.salary.rows)
+    this.transferStatus(tgt, tgt.name)
+    this.transferStatus(tgt, tgt.description)
     this.transferStatus(tgt, tgt.capacity)
     this.transferStatus(tgt, tgt.parallelSchedule)
     this.transferStatus(tgt, tgt.capitalExpenditures)
@@ -161,6 +261,20 @@ export class EfficiencyComputationMainHandler extends StateHandler<EfficiencyCom
     }
     this.validate(state)
     return state
+  }
+
+  logErrors(tgt: EfficiencyComputationState): string {
+    return tgt.what
+      ?.map(msg => {
+        if (msg === VALUE_IS_REQUIRED) {
+          return ANY_REQUIRED_VALUES_ARE_MISSED
+        } else if (msg.includes(MAX_SYMBOL_QTY)) {
+          return 'Соблюдены не все ограничения длин строк'
+        }
+        return msg
+      })
+      ?.join('\n')
+      ?? ''
   }
 
   powerDiff(tgt: ParallelScheduleParamsState): { abs: string, rel: string } {
@@ -255,7 +369,7 @@ export class EfficiencyComputationMainHandler extends StateHandler<EfficiencyCom
   }
 
   updateCapacityParams(tgt: EfficiencyComputationState, kwargs: CapacityParamsKw) {
-    if ((kwargs.oldCapacityDto !== undefined || kwargs.newCapacityDto !== undefined) && tgt.track === null) {
+    if ((kwargs.oldCapacityDto != null || kwargs.newCapacityDto != null) && tgt.track === null) {
       throw new Error('Попытка выбора расчета пропускной способности при невыбранном участке')
     }
     if (kwargs.oldCapacityDto?.schemaId !== tgt.capacity.oldCapacityDto?.schemaId) {
@@ -270,8 +384,8 @@ export class EfficiencyComputationMainHandler extends StateHandler<EfficiencyCom
 
   updateParallelScheduleParams(tgt: EfficiencyComputationState, kwargs: ParallelScheduleParamsKwArgs) {
     if (
-      tgt.capacity.oldCapacityDto === null && kwargs.oldComputation !== undefined ||
-      tgt.capacity.newCapacityDto === null && kwargs.newComputation !== undefined
+      tgt.capacity.oldCapacityDto === null && kwargs.oldComputation != null ||
+      tgt.capacity.newCapacityDto === null && kwargs.newComputation != null
     ) {
       throw new Error('Попытка выбрать расчет нагрузочной способности при невыбранном расчете пропускной способности')
     }

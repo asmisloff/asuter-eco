@@ -1,3 +1,4 @@
+import { NOT_A_NUMBER, VALUE_IS_REQUIRED, VALUE_RANGE_VIOLATION } from 'economic/const'
 import { StateHandler, Status, Verifiable } from './verifiable'
 
 /** Верефицируемое строковое состояние. */
@@ -56,7 +57,7 @@ export abstract class StringStateHandler extends StateHandler<StringState> {
   checkIsNumber(tgt: StringState): number {
     const numberValue = this.parseNumber(tgt.value)
     if (isNaN(numberValue)) {
-      this.addError(tgt, 'Значение должно быть числом')
+      this.addError(tgt, NOT_A_NUMBER)
     }
     return numberValue
   }
@@ -66,7 +67,7 @@ export abstract class StringStateHandler extends StateHandler<StringState> {
     const stringValue = tgt.value
     const numberValue = this.parseNumber(stringValue)
     if (isNaN(numberValue)) {
-      this.addError(tgt, 'Значение должно быть числом')
+      this.addError(tgt, NOT_A_NUMBER)
     }
     return numberValue
   }
@@ -74,7 +75,7 @@ export abstract class StringStateHandler extends StateHandler<StringState> {
   checkIsNotBlank(tgt: StringState): boolean {
     const blank = isBlank(tgt.value)
     if (blank) {
-      this.addError(tgt, 'Необходимо ввести значение')
+      this.addError(tgt, VALUE_IS_REQUIRED)
     }
     return !blank
   }
@@ -97,7 +98,7 @@ export abstract class StringStateHandler extends StateHandler<StringState> {
       tgt,
       numberValue >= min && numberValue <= max,
       Status.Error,
-      `Диапазон допустимых значений: ${min}...${max}`
+      `${VALUE_RANGE_VIOLATION} [${min}...${max}]`
     )
   }
 
@@ -112,7 +113,7 @@ export abstract class StringStateHandler extends StateHandler<StringState> {
       tgt,
       Number.isInteger(numberValue),
       Status.Error,
-      'Значение должно быть целым числом'
+      NOT_A_NUMBER
     )
   }
 

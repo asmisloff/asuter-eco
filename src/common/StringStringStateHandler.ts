@@ -20,7 +20,7 @@ export class StringStringStateHandler extends StringStateHandler {
     validate(tgt: StringState): Status {
         this.reset(tgt)
         if (tgt.value.length > this.maxLength || tgt.value.length < this.minLength) {
-            this.addError(tgt, `${MAX_SYMBOL_QTY}: ${this.minLength}...${this.maxLength}`)
+            this.addError(tgt, `${MAX_SYMBOL_QTY} [${this.minLength}...${this.maxLength}]`)
         }
         return tgt.status
     }

@@ -41,16 +41,16 @@ export interface RatesState extends Verifiable {
 }
 
 export type RatesStateKw = Partial<{
-    profitRateForCargoTurnover: string
-    spendingRateForEconomicTasks: string
-    reducedEnergyConsumption: string
-    electricityCostPerTraction: string
-    incomeTax: string
-    propertyTax: string
-    unifiedSocialTax: string
-    discountRate: string
-    annualInflationRate: string
-    annualSalaryIndexation: string
-    annualIncreaseInElectricityTariff: string
-    calculationPeriod: string
+    profitRateForCargoTurnover: string | number
+    spendingRateForEconomicTasks: string | number
+    reducedEnergyConsumption: string | number
+    electricityCostPerTraction: string | number
+    incomeTax: string | number
+    propertyTax: string | number
+    unifiedSocialTax: string | number
+    discountRate: string | number
+    annualInflationRate: string | number
+    annualSalaryIndexation: string | number
+    annualIncreaseInElectricityTariff: string | number
+    calculationPeriod: string | number
 }>

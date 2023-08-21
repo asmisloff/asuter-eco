@@ -44,7 +44,7 @@ export const StringStateInput = (props: {
   )
 }
 
-export function CapacityParamsView(props: { capacity: CapacityParamsState }) {
+export function CapacityParamsView(props: { capacity: CapacityParamsState, isTrackSelected: boolean }) {
   const {
     oldCapacityDto: oldCapacityInfo,
     newCapacityDto: newCapacityInfo,
@@ -71,6 +71,8 @@ export function CapacityParamsView(props: { capacity: CapacityParamsState }) {
           )
         }
         style={{ width: 300, height: 120 }}
+        disabled={!props.isTrackSelected}
+        title={!props.isTrackSelected ? 'Сначала нужно выбрать участок' : ''}
       />
       <textarea
         defaultValue={JSON.stringify(newCapacityInfo)}
@@ -82,6 +84,8 @@ export function CapacityParamsView(props: { capacity: CapacityParamsState }) {
           )
         }
         style={{ width: 300, height: 120 }}
+        disabled={!props.isTrackSelected}
+        title={!props.isTrackSelected ? 'Сначала нужно выбрать участок' : ''}
       />
       <StringStateInput
         state={maxTrainMass}
@@ -98,7 +102,7 @@ export function CapacityParamsView(props: { capacity: CapacityParamsState }) {
       <StringStateInput
         state={oldInterval}
         label={'Старый интервал'}
-        placeholder={props.capacity.oldCapacityDto?.interval?.toString() ?? ''}
+        placeholder={props.capacity.oldCapacityDto?.trainInterval?.toString() ?? ''}
         onBlur={(v) =>
           dispatch(
             economicSlice.actions.updateCapacityParams({ oldInterval: v })
@@ -108,7 +112,7 @@ export function CapacityParamsView(props: { capacity: CapacityParamsState }) {
       <StringStateInput
         state={newInterval}
         label={'Новый интервал'}
-        placeholder={props.capacity.newCapacityDto?.interval?.toString() ?? ''}
+        placeholder={props.capacity.newCapacityDto?.trainInterval?.toString() ?? ''}
         onBlur={(v) =>
           dispatch(
             economicSlice.actions.updateCapacityParams({ newInterval: v })

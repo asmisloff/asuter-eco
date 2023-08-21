@@ -1,8 +1,4 @@
-import {
-  StringState,
-  isBlank
-} from '.././StringStateHandler';
-import { Status } from '.././verifiable';
+import { VALUE_RANGE_VIOLATION } from 'economic/const';
 import { FloatStringStateHandler } from './FloatStringStateHandler';
 
 export class IntStringStateHandler extends FloatStringStateHandler {
@@ -16,7 +12,7 @@ export class IntStringStateHandler extends FloatStringStateHandler {
       minValue < Number.MIN_SAFE_INTEGER ||
       maxValue > Number.MAX_SAFE_INTEGER
     ) {
-      throw new Error('Недопустимые предельные значения целого числа');
+      throw new Error(`${VALUE_RANGE_VIOLATION} [${Number.MIN_SAFE_INTEGER}...${Number.MAX_SAFE_INTEGER}]`);
     }
     this.minValue = minValue;
     this.maxValue = maxValue;

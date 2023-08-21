@@ -1,2 +1,6 @@
-export const DEFAULT_AND_ACTUAL_VALUES_DONT_MATCH = 'Введенное значение не совпадает со значением по умолчанию'
+export const VALUE_IS_REQUIRED = 'Поле обязательно для заполнения'
+export const ANY_REQUIRED_VALUES_ARE_MISSED = 'Не все обязательные значения введены'
+export const VALUE_RANGE_VIOLATION = 'Значение должно находиться в пределах'
+export const NOT_A_NUMBER = 'Значение должно быть числом'
 export const MAX_SYMBOL_QTY = 'Допустимое количество символов'
+export const DEFAULT_AND_ACTUAL_VALUES_DONT_MATCH = 'Уведомление: введенное значение не совпадает со значением по умолчанию'

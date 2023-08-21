@@ -12,6 +12,6 @@ export interface ParallelScheduleParamsState extends Verifiable {
 export interface ParallelScheduleParamsKwArgs {
     oldComputation?: ParallelEconComputationDto | null
     newComputation?: ParallelEconComputationDto | null
-    oldDailyConsumption?: string | number
-    newDailyConsumption?: string | number
+    oldDailyConsumption?: string
+    newDailyConsumption?: string
 }

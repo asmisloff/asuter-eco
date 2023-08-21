@@ -16,8 +16,8 @@ export interface SalaryStateRow extends Verifiable {
 export interface SalaryStateKw {
     employee?: string,
     equipment?: string,
-    qty?: string,
-    hourlyRate?: string,
-    annualOutput?: string,
-    motivation?: string
+    qty?: string | number,
+    hourlyRate?: string | number,
+    annualOutput?: string | number,
+    motivation?: string | number
 }
