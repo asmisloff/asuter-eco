@@ -1,16 +1,16 @@
 {
   "files": {
-    "main.js": "/economic/static/js/main.f29d70ab.chunk.js",
-    "main.js.map": "/economic/static/js/main.f29d70ab.chunk.js.map",
-    "runtime-main.js": "/economic/static/js/runtime-main.6239691a.js",
-    "runtime-main.js.map": "/economic/static/js/runtime-main.6239691a.js.map",
-    "static/js/2.cb964bb9.chunk.js": "/economic/static/js/2.cb964bb9.chunk.js",
-    "static/js/2.cb964bb9.chunk.js.map": "/economic/static/js/2.cb964bb9.chunk.js.map",
-    "index.html": "/economic/index.html",
-    "static/js/2.cb964bb9.chunk.js.LICENSE.txt": "/economic/static/js/2.cb964bb9.chunk.js.LICENSE.txt"
+    "main.js": "/asuter-eco/static/js/main.f29d70ab.chunk.js",
+    "main.js.map": "/asuter-eco/static/js/main.f29d70ab.chunk.js.map",
+    "runtime-main.js": "/asuter-eco/static/js/runtime-main.d0e3c56e.js",
+    "runtime-main.js.map": "/asuter-eco/static/js/runtime-main.d0e3c56e.js.map",
+    "static/js/2.cb964bb9.chunk.js": "/asuter-eco/static/js/2.cb964bb9.chunk.js",
+    "static/js/2.cb964bb9.chunk.js.map": "/asuter-eco/static/js/2.cb964bb9.chunk.js.map",
+    "index.html": "/asuter-eco/index.html",
+    "static/js/2.cb964bb9.chunk.js.LICENSE.txt": "/asuter-eco/static/js/2.cb964bb9.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.6239691a.js",
+    "static/js/runtime-main.d0e3c56e.js",
     "static/js/2.cb964bb9.chunk.js",
     "static/js/main.f29d70ab.chunk.js"
   ]
