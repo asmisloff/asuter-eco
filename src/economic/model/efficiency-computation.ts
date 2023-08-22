@@ -4,7 +4,7 @@ import { CapitalExpendituresTableState } from './capital-expenditures'
 import { ParallelScheduleParamsState } from './parallel-schedule-params'
 import { AdditionalExpendituresTableState } from './additional-expendures'
 import { SalaryStateTable } from './salary'
-import { RatesState } from './taxes'
+import { RatesState } from './rates'
 import { StringState } from 'common/StringStateHandler'
 
 export interface EfficiencyComputationState extends Verifiable {

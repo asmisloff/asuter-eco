@@ -5,7 +5,7 @@ import { ParallelScheduleParamsKwArgs } from './model/parallel-schedule-params';
 import { CapitalExpendituresRowKwArgs } from './model/capital-expenditures';
 import { AdditionalExpendituresRowKwArgs } from './model/additional-expendures';
 import { SalaryStateKw } from './model/salary'
-import { RatesStateKw } from './model/taxes'
+import { RatesStateKw } from './model/rates'
 import { TrackParams } from './model/efficiency-computation';
 import { EfficiencyComputationDto } from './model/dto';
 

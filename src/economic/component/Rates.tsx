@@ -1,4 +1,4 @@
-import * as taxes from 'economic/model/taxes'
+import * as taxes from 'economic/model/rates'
 import React, { memo } from 'react'
 import { StringStateInput } from './CapacityParamsView'
 import { EfficiencyComputationMainHandler } from 'economic/handler/EfficiencyComputationMainHandler'

@@ -3,7 +3,7 @@ import { StringStateRecordHandler } from 'common/StringStateRecordHandler'
 import { FloatStringStateHandler } from 'common/number-state-handler/FloatStringStateHandler'
 import { IntStringStateHandler } from 'common/number-state-handler/IntStringStateHandler'
 import { Status } from 'common/verifiable'
-import { RatesState, RatesStateKw } from 'economic/model/taxes'
+import { RatesState, RatesStateKw } from 'economic/model/rates'
 
 export class RatesStateHandler extends StringStateRecordHandler<RatesState, RatesStateKw> {
 
@@ -16,20 +16,17 @@ export class RatesStateHandler extends StringStateRecordHandler<RatesState, Rate
     readonly DEFAULT_ANNUAL_INCREASE_IN_ELECTRICITY_TARIFF = 5.0
     readonly DEFAULT_CALC_PERIOD = 5
 
-    private fReqHandler = new FloatStringStateHandler(0, 100, 2, true)
-    private fOptHandler = new FloatStringStateHandler(0, 100, 2, false)
+    private rateHandler = new FloatStringStateHandler(0, 1e4, 1, true)
+    private energyConsumptionHandler = new FloatStringStateHandler(-100, 50, 2, true)
+    private electricityCostHandler = new FloatStringStateHandler(0, 1e3, 1, true)
+    private fOptHandler = new FloatStringStateHandler(0, 50, 2, false)
     private calcPeriodHandler = new IntStringStateHandler(1, 50, false)
 
-    handlers: Record<
-        | 'profitRateForCargoTurnover' | 'spendingRateForEconomicTasks' | 'reducedEnergyConsumption' | 'electricityCostPerTraction' | 'incomeTax'
-        | 'propertyTax' | 'unifiedSocialTax' | 'discountRate' | 'annualInflationRate' | 'annualSalaryIndexation' | 'annualIncreaseInElectricityTariff'
-        | 'calculationPeriod',
-        StringStateHandler | ((arg?: any) => any)
-    > = {
-        profitRateForCargoTurnover: this.fReqHandler,
-        spendingRateForEconomicTasks: this.fReqHandler,
-        reducedEnergyConsumption: this.fReqHandler,
-        electricityCostPerTraction: this.fReqHandler,
+    handlers: Record<keyof RatesStateKw, StringStateHandler | ((arg?: any) => any)> = {
+        profitRateForCargoTurnover: this.rateHandler,
+        spendingRateForEconomicTasks: this.rateHandler,
+        reducedEnergyConsumption: this.energyConsumptionHandler,
+        electricityCostPerTraction: this.electricityCostHandler,
         incomeTax: this.fOptHandler,
         propertyTax: this.fOptHandler,
         unifiedSocialTax: this.fOptHandler,

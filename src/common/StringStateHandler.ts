@@ -1,4 +1,4 @@
-import { NOT_A_NUMBER, VALUE_IS_REQUIRED, VALUE_RANGE_VIOLATION } from 'economic/const'
+import { NOT_A_NUMBER, VALUE_IS_REQUIRED, NUMERIC_RANGE_VIOLATION } from 'economic/const'
 import { StateHandler, Status, Verifiable } from './verifiable'
 
 /** Верефицируемое строковое состояние. */
@@ -98,7 +98,7 @@ export abstract class StringStateHandler extends StateHandler<StringState> {
       tgt,
       numberValue >= min && numberValue <= max,
       Status.Error,
-      `${VALUE_RANGE_VIOLATION} [${min}...${max}]`
+      `${NUMERIC_RANGE_VIOLATION} [${min}...${max}]`
     )
   }
 

@@ -13,10 +13,10 @@ import { SalaryRowStateHandler } from './SalaryStateHandler'
 import { SalaryStateKw } from 'economic/model/salary'
 import { StringState, StringStateHandler, format } from 'common/StringStateHandler'
 import { RatesStateHandler } from './RatesStateHandler'
-import { RatesStateKw } from 'economic/model/taxes'
+import { RatesStateKw } from 'economic/model/rates'
 import { EfficiencyComputationDto, EfficiencyInputDto } from 'economic/model/dto'
 import { StringStringStateHandler } from 'common/StringStringStateHandler'
-import { ANY_REQUIRED_VALUES_ARE_MISSED, MAX_SYMBOL_QTY, VALUE_IS_REQUIRED } from 'economic/const'
+import { ANY_REQUIRED_VALUES_ARE_MISSED, MAX_SYMBOL_QTY, VALUE_IS_REQUIRED, NUMERIC_RANGE_VIOLATION, ANY_NUMERIC_VALUES_ARE_OUT_OF_RANGE, ANY_STRINGS_HAVE_WRONG_LENGTH, NOT_A_NUMBER, ANY_NUMBERS_ARE_NOT_NUMBERS } from 'economic/const'
 
 export class EfficiencyComputationMainHandler extends StateHandler<EfficiencyComputationState> {
 
@@ -264,17 +264,22 @@ export class EfficiencyComputationMainHandler extends StateHandler<EfficiencyCom
   }
 
   logErrors(tgt: EfficiencyComputationState): string {
-    return tgt.what
+    const messages = tgt.what
       ?.map(msg => {
         if (msg === VALUE_IS_REQUIRED) {
           return ANY_REQUIRED_VALUES_ARE_MISSED
         } else if (msg.includes(MAX_SYMBOL_QTY)) {
-          return 'Соблюдены не все ограничения длин строк'
+          return ANY_STRINGS_HAVE_WRONG_LENGTH
+        } else if (msg.includes(NUMERIC_RANGE_VIOLATION)) {
+          return ANY_NUMERIC_VALUES_ARE_OUT_OF_RANGE
+        } else if (msg.includes(NOT_A_NUMBER)) {
+          return ANY_NUMBERS_ARE_NOT_NUMBERS
         }
         return msg
-      })
-      ?.join('\n')
-      ?? ''
+      }) ?? []
+    return Array.from(new Set(messages)).sort()
+      .map((s, i) => `${i + 1}. ${s}`)
+      .join('\n')
   }
 
   powerDiff(tgt: ParallelScheduleParamsState): { abs: string, rel: string } {

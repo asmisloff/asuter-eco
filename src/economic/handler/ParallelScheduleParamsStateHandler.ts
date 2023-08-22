@@ -2,7 +2,7 @@ import { StringStateHandler } from 'common/StringStateHandler'
 import { StringStateRecordHandler } from 'common/StringStateRecordHandler'
 import { FloatStringStateHandler } from 'common/number-state-handler/FloatStringStateHandler'
 import { Status } from 'common/verifiable'
-import { DEFAULT_AND_ACTUAL_VALUES_DONT_MATCH } from 'economic/const'
+import { DEFAULT_AND_ACTUAL_VALUES_MISMATCH } from 'economic/const'
 import { ParallelEconComputationDto } from 'economic/model/dto'
 import { ParallelScheduleParamsKwArgs, ParallelScheduleParamsState } from 'economic/model/parallel-schedule-params'
 
@@ -25,7 +25,7 @@ export class ParallelScheduleParamsStateHandler extends StringStateRecordHandler
         } else {
             this.dcHandler.validate(tgt.oldDailyConsumption)
             if (tgt.oldDailyConsumption.value !== '' && !this.dcHandler.equal(tgt.oldDailyConsumption, tgt.oldComputation.energyConsumption)) {
-                this.dcHandler.addWarning(tgt.oldDailyConsumption, DEFAULT_AND_ACTUAL_VALUES_DONT_MATCH)
+                this.dcHandler.addWarning(tgt.oldDailyConsumption, DEFAULT_AND_ACTUAL_VALUES_MISMATCH)
             }
         }
 
@@ -34,7 +34,7 @@ export class ParallelScheduleParamsStateHandler extends StringStateRecordHandler
         } else {
             this.dcHandler.validate(tgt.newDailyConsumption)
             if (tgt.newDailyConsumption.value !== '' && !this.dcHandler.equal(tgt.newDailyConsumption, tgt.newComputation.energyConsumption)) {
-                this.dcHandler.addWarning(tgt.newDailyConsumption, DEFAULT_AND_ACTUAL_VALUES_DONT_MATCH)
+                this.dcHandler.addWarning(tgt.newDailyConsumption, DEFAULT_AND_ACTUAL_VALUES_MISMATCH)
             }
         }
 

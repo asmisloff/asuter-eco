@@ -3,7 +3,7 @@ import { StringStateRecordHandler } from 'common/StringStateRecordHandler'
 import { FloatStringStateHandler } from 'common/number-state-handler/FloatStringStateHandler'
 import { IntStringStateHandler } from 'common/number-state-handler/IntStringStateHandler'
 import { Status } from 'common/verifiable'
-import { DEFAULT_AND_ACTUAL_VALUES_DONT_MATCH } from 'economic/const'
+import { DEFAULT_AND_ACTUAL_VALUES_MISMATCH } from 'economic/const'
 import { CapacityParamsState, CapacityParamsKw } from 'economic/model/capacity-params'
 import { CapacityEconComputationDto } from 'economic/model/dto'
 
@@ -30,10 +30,10 @@ export class CapacityParamsStateHandler extends StringStateRecordHandler<Capacit
       this.intervalHandler.validate(tgt.oldInterval)
       this.trainQtyHandler.validate(tgt.oldTrainQty)
       if (tgt.oldInterval.value !== '' && !this.intervalHandler.equal(tgt.oldInterval, tgt.oldCapacityDto.trainInterval)) {
-        this.intervalHandler.addWarning(tgt.oldInterval, DEFAULT_AND_ACTUAL_VALUES_DONT_MATCH)
+        this.intervalHandler.addWarning(tgt.oldInterval, DEFAULT_AND_ACTUAL_VALUES_MISMATCH)
       }
       if (tgt.oldTrainQty.value !== '' && !this.trainQtyHandler.equal(tgt.oldTrainQty, tgt.oldCapacityDto.trainQty)) {
-        this.trainQtyHandler.addWarning(tgt.oldTrainQty, DEFAULT_AND_ACTUAL_VALUES_DONT_MATCH)
+        this.trainQtyHandler.addWarning(tgt.oldTrainQty, DEFAULT_AND_ACTUAL_VALUES_MISMATCH)
       }
     }
 
@@ -44,10 +44,10 @@ export class CapacityParamsStateHandler extends StringStateRecordHandler<Capacit
       this.intervalHandler.validate(tgt.newInterval)
       this.trainQtyHandler.validate(tgt.newTrainQty)
       if (tgt.newInterval.value !== '' && !this.intervalHandler.equal(tgt.newInterval, tgt.newCapacityDto.trainInterval)) {
-        this.intervalHandler.addWarning(tgt.newInterval, DEFAULT_AND_ACTUAL_VALUES_DONT_MATCH)
+        this.intervalHandler.addWarning(tgt.newInterval, DEFAULT_AND_ACTUAL_VALUES_MISMATCH)
       }
       if (tgt.newTrainQty.value !== '' && !this.trainQtyHandler.equal(tgt.newTrainQty, tgt.newCapacityDto.trainQty)) {
-        this.trainQtyHandler.addWarning(tgt.newTrainQty, DEFAULT_AND_ACTUAL_VALUES_DONT_MATCH)
+        this.trainQtyHandler.addWarning(tgt.newTrainQty, DEFAULT_AND_ACTUAL_VALUES_MISMATCH)
       }
     }
 
@@ -56,7 +56,7 @@ export class CapacityParamsStateHandler extends StringStateRecordHandler<Capacit
     } else {
       this.massHandler.validate(tgt.maxTrainMass)
       if (tgt.maxTrainMass.value !== '' && !this.massHandler.equal(tgt.maxTrainMass, this.defaultMass(tgt)!)) {
-        this.massHandler.addWarning(tgt.maxTrainMass, DEFAULT_AND_ACTUAL_VALUES_DONT_MATCH)
+        this.massHandler.addWarning(tgt.maxTrainMass, DEFAULT_AND_ACTUAL_VALUES_MISMATCH)
       }
     }
 
