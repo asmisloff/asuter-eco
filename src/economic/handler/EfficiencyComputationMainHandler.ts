@@ -354,6 +354,12 @@ export class EfficiencyComputationMainHandler extends StateHandler<EfficiencyCom
     return { abs: '', rel: '' }
   }
 
+  copy(tgt: EfficiencyComputationState): EfficiencyComputationState {
+    const cp = { ...tgt }
+    cp.handle = StateHandler.cnt++
+    return cp
+  }
+
   updateName(tgt: EfficiencyComputationState, name: string) {
     tgt.name = this.nameHandler.create(name)
     this.validate(tgt)

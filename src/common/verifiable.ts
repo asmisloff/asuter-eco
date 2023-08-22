@@ -1,16 +1,16 @@
 /**
- * Здесь определены базовые типы, на которых основана предлагаемая стратения управления
+ * Здесь определены базовые типы, на которых основана предлагаемая стратегия управления
  * состоянием объектов со сложной валидацией.
  */
 
 /** Базовый интерфейс всех верифицируемых объектов. */
 export interface Verifiable {
   /** Идентификатор объекта. */
-  handle: number;
+  handle: number
   /** Статус - результат последней валидации объекта. */
-  status: Status;
+  status: Status
   /** Массив строк, разъясняющих ошибку или предупреждение. */
-  what?: string[];
+  what?: string[]
 }
 
 /** Статус верифицируемого объекта. */
@@ -29,13 +29,13 @@ export abstract class StateHandler<S extends Verifiable> {
   /** Счетчик с автоинкрементом при создании новго объекта StringState.
    * Текущее значение присваивается полю handle вновь создаваемого объекта.
    */
-  protected static cnt = Number.MIN_SAFE_INTEGER;
+  protected static cnt = Number.MIN_SAFE_INTEGER
 
   /**
    * Проверяет собственные инварианты объекта. Изменяет status и what управляемого объекта.
    * @returns статус объекта
    */
-  abstract validate(tgt: S): Status;
+  abstract validate(tgt: S): Status
 
   /**
    * Добавить сведения об ошибке в управляемом объекте.
@@ -43,12 +43,12 @@ export abstract class StateHandler<S extends Verifiable> {
    * @param e строка или массив строк с текстами ошибок
    */
   addError(tgt: Verifiable, e: string): void {
-    tgt.status = Status.Error;
+    tgt.status = Status.Error
     if (tgt.what == null) {
-      tgt.what = [];
+      tgt.what = []
     }
     if (tgt.what!.find((it) => it === e) == null) {
-      tgt.what.push(e);
+      tgt.what.push(e)
     }
   }
 
@@ -58,20 +58,20 @@ export abstract class StateHandler<S extends Verifiable> {
    * @param w строка или массив строк с текстами ошибок
    */
   addWarning(tgt: Verifiable, w: string): void {
-    tgt.status = Math.max(Status.Warning, tgt.status);
+    tgt.status = Math.max(Status.Warning, tgt.status)
     if (tgt.what == null) {
-      tgt.what = [];
+      tgt.what = []
     }
     if (tgt.what!.find((it) => it === w) == null) {
-      tgt.what.push(w);
+      tgt.what.push(w)
     }
   }
 
   transferStatus(tgt: Verifiable, src: Verifiable): void {
-    tgt.status = Math.max(tgt.status, src.status);
+    tgt.status = Math.max(tgt.status, src.status)
     for (const s of src.what ?? []) {
-      const m = src.status === Status.Warning ? this.addWarning : this.addError;
-      m(tgt, s);
+      const m = src.status === Status.Warning ? this.addWarning : this.addError
+      m(tgt, s)
     }
   }
 
@@ -91,22 +91,22 @@ export abstract class StateHandler<S extends Verifiable> {
     if (!condition) {
       switch (status) {
         case Status.Warning:
-          this.addWarning(tgt, msg);
-          break;
+          this.addWarning(tgt, msg)
+          break
         case Status.Error:
-          this.addError(tgt, msg);
-          break;
+          this.addError(tgt, msg)
+          break
         default:
-          break;
+          break
       }
     }
-    return condition;
+    return condition
   }
 
   /** Подготовить объект в валидации: установить status = Ok, удалить what. */
   reset(tgt: Verifiable) {
-    tgt.status = Status.Ok;
-    delete tgt.what;
+    tgt.status = Status.Ok
+    delete tgt.what
   }
 
   parseNumber(s: string): number {

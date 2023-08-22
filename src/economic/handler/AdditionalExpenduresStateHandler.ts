@@ -5,6 +5,7 @@ import { StringStateRecordHandler } from 'common/StringStateRecordHandler'
 import { StringStateTableHandler } from 'common/StringStateTableHandler'
 import { StringStringStateHandler } from 'common/StringStringStateHandler'
 import { AdditionalExpendituresRowKwArgs, AdditionalExpendituresRowState } from 'economic/model/additional-expendures'
+import { ExpenditureType } from 'economic/model/dto'
 
 class RowHanler extends StringStateRecordHandler<AdditionalExpendituresRowState, AdditionalExpendituresRowKwArgs> {
 
@@ -18,7 +19,7 @@ class RowHanler extends StringStateRecordHandler<AdditionalExpendituresRowState,
         equipment: this.equipmentHandler,
         price: this.priceHandler,
         qty: this.qtyHandler,
-        period: (s: 'OneTime' | 'Yearly' | undefined) => s === undefined ? 'Yearly' : s
+        period: (s?: ExpenditureType) => s ?? 'ANNUAL'
     }
 }
 
