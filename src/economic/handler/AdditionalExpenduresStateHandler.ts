@@ -8,12 +8,12 @@ import { AdditionalExpendituresRowKwArgs, AdditionalExpendituresRowState } from 
 
 class RowHanler extends StringStateRecordHandler<AdditionalExpendituresRowState, AdditionalExpendituresRowKwArgs> {
 
-    private expItemHandler = new StringStringStateHandler(0, 50)
+    private expItemHandler = new StringStringStateHandler(5, 50)
     private equipmentHandler = new StringStringStateHandler(0, 50)
-    private priceHandler = new FloatStringStateHandler(0, 10e6, 2, true)
+    private priceHandler = new FloatStringStateHandler(1, 10e6, 2, true)
     private qtyHandler = new IntStringStateHandler(1, 1e3, true)
 
-    handlers: Record<'expendureItem' | 'equipment' | 'price' | 'qty' | 'period', StringStateHandler | ((arg?: any) => any)> = {
+    handlers: Record<keyof AdditionalExpendituresRowKwArgs, StringStateHandler | ((arg?: any) => any)> = {
         expendureItem: this.expItemHandler,
         equipment: this.equipmentHandler,
         price: this.priceHandler,

@@ -8,14 +8,12 @@ export abstract class StringStateRecordHandler<R extends Verifiable, K extends R
     create(kwargs: K): R {
         const row = {} as any
         for (const key in this.handlers) {
-            // if (!['handle', 'status', 'what'].includes(key)) {
             const h = this.handlers[key]
             if (h instanceof StringStateHandler) {
                 row[key] = h.create(kwargs[key]?.toString())
             } else {
                 row[key] = h(kwargs[key])
             }
-            // }
         }
         row.handle = StateHandler.cnt++
         row.status = Status.Ok
@@ -26,7 +24,6 @@ export abstract class StringStateRecordHandler<R extends Verifiable, K extends R
     update(tgt: R, kwargs: K): R {
         const row = tgt as any
         for (const key in this.handlers) {
-            // if (!['handle', 'status', 'what'].includes(key)) {
             const newValue = kwargs[key]
             if (newValue !== undefined) {
                 const h = this.handlers[key]
@@ -36,7 +33,6 @@ export abstract class StringStateRecordHandler<R extends Verifiable, K extends R
                     row[key] = h(kwargs[key])
                 }
             }
-            // }
         }
         this.validate(tgt)
         return tgt

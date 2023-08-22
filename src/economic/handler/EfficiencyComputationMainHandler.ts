@@ -5,7 +5,7 @@ import { ParallelScheduleParamsKwArgs, ParallelScheduleParamsState } from '../mo
 import { ParallelScheduleParamsStateHandler } from 'economic/handler/ParallelScheduleParamsStateHandler'
 import { CapitalExpendituresRowKwArgs, CapitalExpendituresRowState } from '../model/capital-expenditures'
 import { CapitalExpendituresStateHandler } from 'economic/handler/CapitalExpendituresStateHandler'
-import { EfficiencyComputationState, TrackParams } from 'economic/model/measure-effectiveness'
+import { EfficiencyComputationState, TrackParams } from 'economic/model/efficiency-computation'
 import { AdditionalExpendituresStateHandler } from './AdditionalExpenduresStateHandler'
 import { AdditionalExpendituresRowKwArgs } from 'economic/model/additional-expendures'
 import { StringStateTableHandler } from 'common/StringStateTableHandler'
@@ -372,10 +372,10 @@ export class EfficiencyComputationMainHandler extends StateHandler<EfficiencyCom
     if ((kwargs.oldCapacityDto != null || kwargs.newCapacityDto != null) && tgt.track === null) {
       throw new Error('Попытка выбора расчета пропускной способности при невыбранном участке')
     }
-    if (kwargs.oldCapacityDto?.schemaId !== tgt.capacity.oldCapacityDto?.schemaId) {
+    if (kwargs.oldCapacityDto !== undefined && kwargs.oldCapacityDto?.schemaId !== tgt.capacity.oldCapacityDto?.schemaId) {
       this.updateParallelScheduleParams(tgt, { oldComputation: null })
     }
-    if (kwargs.newCapacityDto?.schemaId !== tgt.capacity.newCapacityDto?.schemaId) {
+    if (kwargs.newCapacityDto !== undefined && kwargs.newCapacityDto?.schemaId !== tgt.capacity.newCapacityDto?.schemaId) {
       this.updateParallelScheduleParams(tgt, { newComputation: null })
     }
     this.capacityHandler.update(tgt.capacity, kwargs)

@@ -62,7 +62,7 @@ export const RatesView = (props: { rates: taxes.RatesState }) => {
       <StringStateInput
         state={props.rates.annualInflationRate}
         label='Годовой темп инфляции, %'
-        placeholder={h.ratesHandler.DEFAULT_DISCOUNT_RATE.toString()}
+        placeholder={h.ratesHandler.DEFAULT_ANNUAL_INFLATION_RATE.toString()}
         onBlur={(v: string) => dispatch(economicSlice.actions.updateRates({ annualInflationRate: v }))}
       />
       <StringStateInput

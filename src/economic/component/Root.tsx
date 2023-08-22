@@ -1,8 +1,8 @@
 import { useAppDispatch, useAppSelector } from '../../store'
-import { CapacityParamsView, StringStateInput } from './CapacityParamsView'
+import { CapacityParamsView, StringStateInput, TextArea } from './CapacityParamsView'
 import { CapitalExpendituresView } from './CapitalExpendituresView'
 import { ParallelScheduleParamsView } from './ParallelScheduleParamsView'
-import React, { memo } from 'react'
+import React, { memo, useEffect } from 'react'
 import { AdditionalExpendituresView } from './AdditionalExpendituresView'
 import { SalaryView } from './SalaryView'
 import { RatesView } from './Rates'
@@ -15,6 +15,90 @@ export default function Root() {
   const state = useAppSelector((state) => state.economic)
   const dispatch = useAppDispatch()
   const h = EfficiencyComputationMainHandler.getInstance()
+  
+  useEffect(() => {
+    dispatch(economicSlice.actions.fromDto(
+      {
+        id: 12,
+        name: 'qwrrt',
+        description: '',
+        trackId: 1,
+        trackName: 'Участок',
+        trackLength: 100,
+        capacityComputationBefore: {
+          id: 1,
+          name: 'Пропускная-1',
+          schemaId: 1,
+          trainWeightMaximum: 9000,
+          trainInterval: 16,
+          trainQty: 145
+        },
+        capacityComputationAfter: {
+          id: 1,
+          name: 'Пропускная-1',
+          schemaId: 1,
+          trainWeightMaximum: 9000,
+          trainInterval: 16,
+          trainQty: 145
+        },
+        parallelComputationBefore: {
+          id: 1,
+          name: 'Нагрузочная-1',
+          schemaId: 1,
+          energyConsumptionCalculated: 1300,
+          calculationDuration: 120,
+          energyConsumption: 15600
+        },
+        parallelComputationAfter: {
+          id: 1,
+          name: 'Нагрузочная-1',
+          schemaId: 1,
+          energyConsumptionCalculated: 1300,
+          calculationDuration: 120,
+          energyConsumption: 15600
+        },
+        inputData: {
+          trainWeightMaximum: 12,
+          trainIntervalBefore: 1,
+          trainIntervalAfter: 11,
+          trainQtyBefore: 1,
+          trainQtyAfter: 1,
+          energyConsumptionBefore: 15660,
+          energyConsumptionAfter: 16600,
+          capitalInvestments: [
+            {
+              equipment: '2wwee',
+              equipmentType: 'qwqw',
+              price: 12,
+              amount: 12,
+              serviceLife: 1
+            }
+          ],
+          additionalExpenditures: [],
+          maintenanceSalaries: [],
+          profitOptions: {
+            profitRateForCargoTurnover: 1,
+            spendingRateForEconomicTasks: 1,
+            reducedEnergyConsumption: 1,
+            electricityCostPerTraction: 1
+          },
+          taxRates: {
+            incomeTax: 20,
+            propertyTax: 2.2,
+            unifiedSocialTax: 30.4
+          },
+          inflation: {
+            discountRate: 10,
+            annualInflationRate: 5,
+            annualSalaryIndexation: 5,
+            annualIncreaseInElectricityTariff: 5
+          },
+          calculationPeriod: 5
+        }
+      }
+    ))
+  }, [])
+  
   return (
     <>
       <div>
@@ -31,13 +115,14 @@ export default function Root() {
       </div>
       <div>
         <h2>Участок</h2>
-        <textarea
-          defaultValue={JSON.stringify(state.track)}
-          onBlur={e => dispatch(economicSlice.actions.updateTrack(JSON.parse(e.target.value)))}
+        <TextArea
+          obj={state.track}
+          onBlur={obj => dispatch(economicSlice.actions.updateTrack(obj))}
+          required
         />
       </div>
       <MCapacityParamsView capacity={state.capacity} isTrackSelected={state.track !== null} />
-      <MParallelScheduleParamsView
+      <ParallelScheduleParamsView
         sch={state.parallelSchedule}
         isOldCapacitySelected={state.capacity.oldCapacityDto !== null}
         isNewCapacitySelected={state.capacity.newCapacityDto !== null}

@@ -1,5 +1,5 @@
 import { ParallelScheduleParamsState } from 'economic/model/parallel-schedule-params'
-import { StringStateInput } from './CapacityParamsView'
+import { StringStateInput, TextArea } from './CapacityParamsView'
 import React from 'react'
 import { useAppDispatch } from 'store'
 import economicSlice from 'economic/slice'
@@ -14,31 +14,25 @@ export function ParallelScheduleParamsView(
     return (
         <div>
             <h2>Нагрузочная</h2>
-            <textarea
-                defaultValue={JSON.stringify(props.sch.oldComputation)}
-                onBlur={(e) =>
+            <TextArea
+                obj={props.sch.oldComputation}
+                onBlur={v =>
                     dispatch(
-                        economicSlice.actions.updateParallelScheduleParams({
-                            oldComputation: JSON.parse(e.target.value)
-                        })
+                        economicSlice.actions.updateParallelScheduleParams({oldComputation: v})
                     )
                 }
-                style={{ width: 300, height: 120 }}
                 disabled={!props.isOldCapacitySelected}
-                title={!props.isOldCapacitySelected ? 'Сначала нужно выбрать базовый расчет пропускной способности' : ''}
+                titleIfDisabled={'Сначала нужно выбрать базовый расчет пропускной способности'}
             />
-            <textarea
-                defaultValue={JSON.stringify(props.sch.newComputation)}
-                onBlur={(e) =>
+            <TextArea
+                obj={props.sch.newComputation}
+                onBlur={v =>
                     dispatch(
-                        economicSlice.actions.updateParallelScheduleParams({
-                            newComputation: JSON.parse(e.target.value)
-                        })
+                        economicSlice.actions.updateParallelScheduleParams({newComputation: v})
                     )
                 }
-                style={{ width: 300, height: 120 }}
                 disabled={!props.isNewCapacitySelected}
-                title={!props.isNewCapacitySelected ? 'Сначала нужно выбрать перспективный расчет пропускной способности' : ''}
+                titleIfDisabled={'Сначала нужно выбрать базовый расчет пропускной способности'}
             />
             <StringStateInput
                 state={props.sch.oldDailyConsumption}

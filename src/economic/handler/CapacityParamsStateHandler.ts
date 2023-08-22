@@ -1,15 +1,16 @@
 import { StringStateHandler } from 'common/StringStateHandler'
 import { StringStateRecordHandler } from 'common/StringStateRecordHandler'
 import { FloatStringStateHandler } from 'common/number-state-handler/FloatStringStateHandler'
+import { IntStringStateHandler } from 'common/number-state-handler/IntStringStateHandler'
 import { Status } from 'common/verifiable'
 import { DEFAULT_AND_ACTUAL_VALUES_DONT_MATCH } from 'economic/const'
 import { CapacityParamsState, CapacityParamsKw } from 'economic/model/capacity-params'
 import { CapacityEconComputationDto } from 'economic/model/dto'
 
 export class CapacityParamsStateHandler extends StringStateRecordHandler<CapacityParamsState, CapacityParamsKw> {
-  private massHandler = new FloatStringStateHandler(0, 110e3, 3, false)
-  private intervalHandler = new FloatStringStateHandler(0, 1440, 1, false)
-  private trainQtyHandler = new FloatStringStateHandler(0, 1000, 1, false)
+  private massHandler = new FloatStringStateHandler(1, 110e3, 3, false)
+  private intervalHandler = new IntStringStateHandler(1, 1440, false)
+  private trainQtyHandler = new IntStringStateHandler(1, 1000, false)
 
   readonly handlers: Record<keyof CapacityParamsKw, StringStateHandler | ((arg?: any) => any)> = {
     oldCapacityDto: (v: CapacityEconComputationDto) => v === undefined ? null : v,

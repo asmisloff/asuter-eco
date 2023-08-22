@@ -1,4 +1,4 @@
-import { CSSProperties } from 'react'
+import { CSSProperties, useEffect, useState } from 'react'
 import React from 'react'
 import { StringState, localized } from '../../common/StringStateHandler'
 import { Status } from '../../common/verifiable'
@@ -43,6 +43,43 @@ export const StringStateInput = (props: {
   )
 }
 
+export function TextArea<T>(props: {
+  obj: T | null,
+  onBlur: (v: T | null) => void,
+  disabled?: boolean,
+  titleIfDisabled?: string,
+  required?: boolean
+}) {
+  const [text, setText] = useState('null')
+  useEffect(() => {
+    let text: string
+    try {
+      text = JSON.stringify(props.obj)
+    } catch (e: any) {
+      text = 'null'
+    }
+    setText(text)
+  }, [props.obj])
+  return (
+    <textarea
+      value={text}
+      onChange={e => setText(e.target.value)}
+      onBlur={e => {
+        let obj: T | null
+        try {
+          obj = JSON.parse(e.target.value) as T
+        } catch (e: any) {
+          obj = null
+        }
+        props.onBlur(obj)
+      }}
+      style={{ width: 300, height: 120, backgroundColor: props.required && props.obj === null ? 'pink' : '' }}
+      disabled={props.disabled}
+      title={props.disabled ? props.titleIfDisabled : ''}
+    />
+  )
+}
+
 export function CapacityParamsView(props: { capacity: CapacityParamsState, isTrackSelected: boolean }) {
   const {
     oldCapacityDto: oldCapacityInfo,
@@ -60,31 +97,17 @@ export function CapacityParamsView(props: { capacity: CapacityParamsState, isTra
   return (
     <div>
       <h2>Пропускная</h2>
-      <textarea
-        defaultValue={JSON.stringify(oldCapacityInfo)}
-        onBlur={(e) =>
-          dispatch(
-            economicSlice.actions.updateCapacityParams({
-              oldCapacityDto: JSON.parse(e.target.value)
-            })
-          )
-        }
-        style={{ width: 300, height: 120 }}
+      <TextArea
+        obj={oldCapacityInfo}
+        onBlur={obj => dispatch(economicSlice.actions.updateCapacityParams({ oldCapacityDto: obj }))}
         disabled={!props.isTrackSelected}
-        title={!props.isTrackSelected ? 'Сначала нужно выбрать участок' : ''}
+        titleIfDisabled='Сначала нужно выбрать участок'
       />
-      <textarea
-        defaultValue={JSON.stringify(newCapacityInfo)}
-        onBlur={(e) =>
-          dispatch(
-            economicSlice.actions.updateCapacityParams({
-              newCapacityDto: JSON.parse(e.target.value)
-            })
-          )
-        }
-        style={{ width: 300, height: 120 }}
+      <TextArea
+        obj={newCapacityInfo}
+        onBlur={obj => dispatch(economicSlice.actions.updateCapacityParams({ newCapacityDto: obj }))}
         disabled={!props.isTrackSelected}
-        title={!props.isTrackSelected ? 'Сначала нужно выбрать участок' : ''}
+        titleIfDisabled='Сначала нужно выбрать участок'
       />
       <StringStateInput
         state={maxTrainMass}

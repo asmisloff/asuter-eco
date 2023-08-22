@@ -8,10 +8,10 @@ import {CapitalExpendituresRowKwArgs, CapitalExpendituresRowState} from 'economi
 
 class RowHandler extends StringStateRecordHandler<CapitalExpendituresRowState, CapitalExpendituresRowKwArgs> {
 
-    readonly handlers: Record<'equipment' | 'type' | 'price' | 'qty' | 'serviceLife', StringStateHandler | ((arg?: any) => any)> = {
+    readonly handlers: Record<keyof CapitalExpendituresRowKwArgs, StringStateHandler | ((arg?: any) => any)> = {
         equipment: new StringStringStateHandler(5, 50),
         type: new StringStringStateHandler(0, 50),
-        price: new FloatStringStateHandler(0, 10e6, 2, true),
+        price: new FloatStringStateHandler(1, 100e6, 2, true),
         qty: new IntStringStateHandler(1, 1e3, true),
         serviceLife: new IntStringStateHandler(1, 100, true)
     }
