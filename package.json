@@ -2,12 +2,14 @@
   "name": "asuter-eco",
   "version": "1.0.0",
   "description": "",
+  "homepage": "https://asmisloff.github.io/asuter-eco/",
   "keywords": [],
   "main": "src/index.tsx",
   "dependencies": {
     "@reduxjs/toolkit": "1.8.0",
     "@types/react-redux": "7.1.23",
     "eslint": "^7.32.0",
+    "gh-pages": "^6.0.0",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-redux": "^7.2.9",
@@ -26,7 +28,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "browserslist": [
     ">0.2%",
