@@ -147,7 +147,7 @@ export default function Root() {
         onClick={() => console.log(h.toDto(state))}
         disabled={state.status > Status.Warning}
         title={h.logErrors(state)}
-      >toDto</button>
+      >DTO в консоль</button>
     </>
   )
 }
