@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.js": "/asuter-eco/static/js/main.6f1b0fdf.chunk.js",
-    "main.js.map": "/asuter-eco/static/js/main.6f1b0fdf.chunk.js.map",
+    "main.js": "/asuter-eco/static/js/main.2b85d5e9.chunk.js",
+    "main.js.map": "/asuter-eco/static/js/main.2b85d5e9.chunk.js.map",
     "runtime-main.js": "/asuter-eco/static/js/runtime-main.d0e3c56e.js",
     "runtime-main.js.map": "/asuter-eco/static/js/runtime-main.d0e3c56e.js.map",
     "static/js/2.cb964bb9.chunk.js": "/asuter-eco/static/js/2.cb964bb9.chunk.js",
@@ -12,6 +12,6 @@
   "entrypoints": [
     "static/js/runtime-main.d0e3c56e.js",
     "static/js/2.cb964bb9.chunk.js",
-    "static/js/main.6f1b0fdf.chunk.js"
+    "static/js/main.2b85d5e9.chunk.js"
   ]
 }
