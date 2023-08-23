@@ -20,19 +20,19 @@ export class ParallelScheduleParamsStateHandler extends StringStateRecordHandler
     validate(tgt: ParallelScheduleParamsState): Status {
         this.reset(tgt)
 
+        this.dcHandler.validate(tgt.oldDailyConsumption)
         if (tgt.oldComputation === null) {
             this.dcHandler.checkIsNotBlank(tgt.oldDailyConsumption)
         } else {
-            this.dcHandler.validate(tgt.oldDailyConsumption)
             if (tgt.oldDailyConsumption.value !== '' && !this.dcHandler.equal(tgt.oldDailyConsumption, tgt.oldComputation.energyConsumption)) {
                 this.dcHandler.addWarning(tgt.oldDailyConsumption, DEFAULT_AND_ACTUAL_VALUES_MISMATCH)
             }
         }
 
+        this.dcHandler.validate(tgt.newDailyConsumption)
         if (tgt.newComputation === null) {
             this.dcHandler.checkIsNotBlank(tgt.newDailyConsumption)
         } else {
-            this.dcHandler.validate(tgt.newDailyConsumption)
             if (tgt.newDailyConsumption.value !== '' && !this.dcHandler.equal(tgt.newDailyConsumption, tgt.newComputation.energyConsumption)) {
                 this.dcHandler.addWarning(tgt.newDailyConsumption, DEFAULT_AND_ACTUAL_VALUES_MISMATCH)
             }

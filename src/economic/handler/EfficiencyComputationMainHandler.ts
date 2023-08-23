@@ -93,7 +93,7 @@ export class EfficiencyComputationMainHandler extends StateHandler<EfficiencyCom
             equipmentName: r.equipment.value,
             amount: this.parseNumber(r.qty.value),
             hourlyRate: hourlyRate,
-            productivity: hourlyRate * 365,
+            productivity: this.parseNumber(r.annualOutput.value),
             additionalPayments: this.parseNumber(r.motivation.value)
           }
         }),

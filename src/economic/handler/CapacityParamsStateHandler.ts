@@ -23,12 +23,16 @@ export class CapacityParamsStateHandler extends StringStateRecordHandler<Capacit
   }
 
   validate(tgt: CapacityParamsState): Status {
+    this.massHandler.validate(tgt.maxTrainMass)
+    this.intervalHandler.validate(tgt.oldInterval)
+    this.trainQtyHandler.validate(tgt.oldTrainQty)
+    this.intervalHandler.validate(tgt.newInterval)
+    this.trainQtyHandler.validate(tgt.newTrainQty)
+
     if (tgt.oldCapacityDto === null) {
       this.intervalHandler.checkIsNotBlank(tgt.oldInterval)
       this.trainQtyHandler.checkIsNotBlank(tgt.oldTrainQty)
     } else {
-      this.intervalHandler.validate(tgt.oldInterval)
-      this.trainQtyHandler.validate(tgt.oldTrainQty)
       if (tgt.oldInterval.value !== '' && !this.intervalHandler.equal(tgt.oldInterval, tgt.oldCapacityDto.trainInterval)) {
         this.intervalHandler.addWarning(tgt.oldInterval, DEFAULT_AND_ACTUAL_VALUES_MISMATCH)
       }
@@ -36,13 +40,11 @@ export class CapacityParamsStateHandler extends StringStateRecordHandler<Capacit
         this.trainQtyHandler.addWarning(tgt.oldTrainQty, DEFAULT_AND_ACTUAL_VALUES_MISMATCH)
       }
     }
-
+    
     if (tgt.newCapacityDto === null) {
       this.intervalHandler.checkIsNotBlank(tgt.newInterval)
       this.trainQtyHandler.checkIsNotBlank(tgt.newTrainQty)
     } else {
-      this.intervalHandler.validate(tgt.newInterval)
-      this.trainQtyHandler.validate(tgt.newTrainQty)
       if (tgt.newInterval.value !== '' && !this.intervalHandler.equal(tgt.newInterval, tgt.newCapacityDto.trainInterval)) {
         this.intervalHandler.addWarning(tgt.newInterval, DEFAULT_AND_ACTUAL_VALUES_MISMATCH)
       }
