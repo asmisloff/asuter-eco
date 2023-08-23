@@ -134,7 +134,7 @@ export default function Root() {
         />
       </div>
       <MCapacityParamsView capacity={state.capacity} isTrackSelected={state.track !== null} />
-      <ParallelScheduleParamsView
+      <MParallelScheduleParamsView
         sch={state.parallelSchedule}
         isOldCapacitySelected={state.capacity.oldCapacityDto !== null}
         isNewCapacitySelected={state.capacity.newCapacityDto !== null}
