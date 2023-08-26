@@ -53,7 +53,6 @@ export const RatesView = (props: { rates: taxes.RatesState }) => {
         <StringStateInput
           state={props.rates.discountRate}
           label='Ставка дисконтирования, %'
-          placeholder={h.ratesHandler.DEFAULT_DISCOUNT_RATE.toString()}
           onBlur={(v: string) => dispatch(economicSlice.actions.updateRates({ discountRate: v }))}
         />
         <input name='coef' value={h.ratesHandler.discountCoefficient(props.rates)} disabled />
@@ -62,25 +61,21 @@ export const RatesView = (props: { rates: taxes.RatesState }) => {
       <StringStateInput
         state={props.rates.annualInflationRate}
         label='Годовой темп инфляции, %'
-        placeholder={h.ratesHandler.DEFAULT_ANNUAL_INFLATION_RATE.toString()}
         onBlur={(v: string) => dispatch(economicSlice.actions.updateRates({ annualInflationRate: v }))}
       />
       <StringStateInput
         state={props.rates.annualSalaryIndexation}
         label='Годовая индексация заработной платы, %'
-        placeholder={h.ratesHandler.DEFAULT_ANNUAL_SALARY_INDEXATION.toString()}
         onBlur={(v: string) => dispatch(economicSlice.actions.updateRates({ annualSalaryIndexation: v }))}
       />
       <StringStateInput
         state={props.rates.annualIncreaseInElectricityTariff}
         label='Годовой рост тарифа на электроэнергию, %'
-        placeholder={h.ratesHandler.DEFAULT_ANNUAL_INCREASE_IN_ELECTRICITY_TARIFF.toString()}
         onBlur={(v: string) => dispatch(economicSlice.actions.updateRates({ annualIncreaseInElectricityTariff: v }))}
       />
       <StringStateInput
         state={props.rates.calculationPeriod}
         label='Расчетный период, лет'
-        placeholder={h.ratesHandler.DEFAULT_CALC_PERIOD.toString()}
         onBlur={(v: string) => dispatch(economicSlice.actions.updateRates({ calculationPeriod: v }))}
       />
     </div>

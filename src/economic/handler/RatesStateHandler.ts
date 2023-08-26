@@ -7,54 +7,41 @@ import { RatesState, RatesStateKw } from 'economic/model/rates'
 
 export class RatesStateHandler extends StringStateRecordHandler<RatesState, RatesStateKw> {
 
+    readonly DEFAULT_REDUCED_ENERGY_CONSUMPTION = 0
     readonly DEFAULT_INCOME_TAX = 20.0
     readonly DEFAULT_PROPERTY_TAX = 2.2
-    readonly DEFAULT_UNIFIED_SOCIAL_TAX = 30.4
+    readonly DEFAULT_UNIFIED_SOCIAL_TAX = 26
     readonly DEFAULT_DISCOUNT_RATE = 10.0
     readonly DEFAULT_ANNUAL_INFLATION_RATE = 5.0
     readonly DEFAULT_ANNUAL_SALARY_INDEXATION = 5.0
     readonly DEFAULT_ANNUAL_INCREASE_IN_ELECTRICITY_TARIFF = 5.0
-    readonly DEFAULT_CALC_PERIOD = 5
 
-    private rateHandler = new FloatStringStateHandler(0, 1e4, 1, true)
+    private rateHandler = new FloatStringStateHandler(0, 1e4, 2, true)
     private energyConsumptionHandler = new FloatStringStateHandler(-100, 50, 2, true)
-    private electricityCostHandler = new FloatStringStateHandler(0, 1e3, 1, true)
-    private fOptHandler = new FloatStringStateHandler(0, 50, 2, false)
-    private calcPeriodHandler = new IntStringStateHandler(1, 50, false)
+    private electricityCostHandler = new FloatStringStateHandler(0, 1e3, 2, true)
+    private reqHandler = new FloatStringStateHandler(0, 50, 2, true)
+    private optHandler = new FloatStringStateHandler(0, 50, 2, false)
+    private calcPeriodHandler = new IntStringStateHandler(1, 50, true)
 
     handlers: Record<keyof RatesStateKw, StringStateHandler | ((arg?: any) => any)> = {
         profitRateForCargoTurnover: this.rateHandler,
         spendingRateForEconomicTasks: this.rateHandler,
         reducedEnergyConsumption: this.energyConsumptionHandler,
         electricityCostPerTraction: this.electricityCostHandler,
-        incomeTax: this.fOptHandler,
-        propertyTax: this.fOptHandler,
-        unifiedSocialTax: this.fOptHandler,
-        discountRate: this.fOptHandler,
-        annualInflationRate: this.fOptHandler,
-        annualSalaryIndexation: this.fOptHandler,
-        annualIncreaseInElectricityTariff: this.fOptHandler,
+        incomeTax: this.optHandler,
+        propertyTax: this.optHandler,
+        unifiedSocialTax: this.optHandler,
+        discountRate: this.reqHandler,
+        annualInflationRate: this.reqHandler,
+        annualSalaryIndexation: this.reqHandler,
+        annualIncreaseInElectricityTariff: this.reqHandler,
         calculationPeriod: this.calcPeriodHandler
-    }
-
-    validate(tgt: RatesState): Status {
-        this.fOptHandler.compareToDefault(tgt.incomeTax, this.DEFAULT_INCOME_TAX)
-        this.fOptHandler.compareToDefault(tgt.propertyTax, this.DEFAULT_PROPERTY_TAX)
-        this.fOptHandler.compareToDefault(tgt.unifiedSocialTax, this.DEFAULT_UNIFIED_SOCIAL_TAX)
-        this.fOptHandler.compareToDefault(tgt.discountRate, this.DEFAULT_DISCOUNT_RATE)
-        this.fOptHandler.compareToDefault(tgt.annualInflationRate, this.DEFAULT_ANNUAL_INFLATION_RATE)
-        this.fOptHandler.compareToDefault(tgt.annualSalaryIndexation, this.DEFAULT_ANNUAL_SALARY_INDEXATION)
-        this.fOptHandler.compareToDefault(tgt.annualIncreaseInElectricityTariff, this.DEFAULT_ANNUAL_INCREASE_IN_ELECTRICITY_TARIFF)
-        this.calcPeriodHandler.compareToDefault(tgt.calculationPeriod, this.DEFAULT_CALC_PERIOD)
-
-        super.validate(tgt)
-        return tgt.status
     }
 
     discountCoefficient(tgt: RatesState): string {
         if (tgt.discountRate.status < Status.Error) {
             const dr = tgt.discountRate.value !== ''
-             ? this.fOptHandler.parseNumber(tgt.discountRate.value)
+             ? this.reqHandler.parseNumber(tgt.discountRate.value)
              : this.DEFAULT_DISCOUNT_RATE
             return format(1.0 / (1.0 + 0.01 * dr), 3)
         }

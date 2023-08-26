@@ -1,6 +1,6 @@
 import { StringState, StringStateHandler } from 'common/StringStateHandler'
 import { Status } from 'common/verifiable'
-import { MAX_SYMBOL_QTY } from 'economic/const'
+import { MAX_SYMBOL_QTY } from 'economic/std-messages'
 
 export class StringStringStateHandler extends StringStateHandler {
 

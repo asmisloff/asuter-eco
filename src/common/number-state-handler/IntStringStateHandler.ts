@@ -1,4 +1,4 @@
-import { NUMERIC_RANGE_VIOLATION } from 'economic/const';
+import { NUMERIC_RANGE_VIOLATION } from 'economic/std-messages';
 import { FloatStringStateHandler } from './FloatStringStateHandler';
 
 export class IntStringStateHandler extends FloatStringStateHandler {

@@ -8,7 +8,7 @@ import { SalaryStateRow, SalaryStateKw } from 'economic/model/salary'
 export class SalaryRowStateHandler extends StringStateRecordHandler<SalaryStateRow, SalaryStateKw> {
 
     handlers: Record<keyof SalaryStateKw, StringStateHandler | ((arg?: any) => any)> = {
-        employee: new StringStringStateHandler(5, 50),
+        employee: new StringStringStateHandler(1, 50),
         equipment: new StringStringStateHandler(0, 50),
         qty: new IntStringStateHandler(1, 100, true),
         hourlyRate: new FloatStringStateHandler(1, 1e4, 2, true),

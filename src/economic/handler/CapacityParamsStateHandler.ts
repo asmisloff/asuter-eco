@@ -3,7 +3,7 @@ import { StringStateRecordHandler } from 'common/StringStateRecordHandler'
 import { FloatStringStateHandler } from 'common/number-state-handler/FloatStringStateHandler'
 import { IntStringStateHandler } from 'common/number-state-handler/IntStringStateHandler'
 import { Status } from 'common/verifiable'
-import { DEFAULT_AND_ACTUAL_VALUES_MISMATCH } from 'economic/const'
+import { DEFAULT_AND_ACTUAL_VALUES_MISMATCH } from 'economic/std-messages'
 import { CapacityParamsState, CapacityParamsKw } from 'economic/model/capacity-params'
 import { CapacityEconComputationDto } from 'economic/model/dto'
 

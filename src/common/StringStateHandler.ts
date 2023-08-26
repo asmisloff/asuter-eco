@@ -1,4 +1,4 @@
-import { NOT_A_NUMBER, VALUE_IS_REQUIRED, NUMERIC_RANGE_VIOLATION } from 'economic/const'
+import { NOT_A_NUMBER, VALUE_IS_REQUIRED, NUMERIC_RANGE_VIOLATION } from 'economic/std-messages'
 import { StateHandler, Status, Verifiable } from './verifiable'
 
 /** Верефицируемое строковое состояние. */

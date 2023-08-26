@@ -16,7 +16,7 @@ import { RatesStateHandler } from './RatesStateHandler'
 import { RatesStateKw } from 'economic/model/rates'
 import { EfficiencyComputationDto, EfficiencyInputDto } from 'economic/model/dto'
 import { StringStringStateHandler } from 'common/StringStringStateHandler'
-import { ANY_REQUIRED_VALUES_ARE_MISSED, MAX_SYMBOL_QTY, VALUE_IS_REQUIRED, NUMERIC_RANGE_VIOLATION, ANY_NUMERIC_VALUES_ARE_OUT_OF_RANGE, ANY_STRINGS_HAVE_WRONG_LENGTH, NOT_A_NUMBER, ANY_NUMBERS_ARE_NOT_NUMBERS } from 'economic/const'
+import { ANY_REQUIRED_VALUES_ARE_MISSED, MAX_SYMBOL_QTY, VALUE_IS_REQUIRED, NUMERIC_RANGE_VIOLATION, ANY_NUMERIC_VALUES_ARE_OUT_OF_RANGE, ANY_STRINGS_HAVE_WRONG_LENGTH, NOT_A_NUMBER, ANY_NUMBERS_ARE_NOT_NUMBERS } from 'economic/std-messages'
 
 export class EfficiencyComputationMainHandler extends StateHandler<EfficiencyComputationState> {
 
@@ -27,7 +27,7 @@ export class EfficiencyComputationMainHandler extends StateHandler<EfficiencyCom
   private additionalExpendituresHandler = new AdditionalExpendituresStateHandler()
   private salaryHandler = new StringStateTableHandler(new SalaryRowStateHandler())
   readonly ratesHandler = new RatesStateHandler()
-  private nameHandler = new StringStringStateHandler(5, 50)
+  private nameHandler = new StringStringStateHandler(1, 50)
   private descriptionHandler = new StringStringStateHandler(0, 50)
 
   private constructor() {
@@ -121,8 +121,7 @@ export class EfficiencyComputationMainHandler extends StateHandler<EfficiencyCom
           annualIncreaseInElectricityTariff: this.tryParseNumber(state.rates.annualIncreaseInElectricityTariff.value)
             ?? this.ratesHandler.DEFAULT_ANNUAL_INCREASE_IN_ELECTRICITY_TARIFF
         },
-        calculationPeriod: this.tryParseNumber(state.rates.calculationPeriod.value)
-          ?? this.ratesHandler.DEFAULT_CALC_PERIOD
+        calculationPeriod: this.parseNumber(state.rates.calculationPeriod.value)
       }
     }
   }
@@ -257,7 +256,13 @@ export class EfficiencyComputationMainHandler extends StateHandler<EfficiencyCom
       capitalExpenditures: this.capitalExpendituresHandler.createDefault(),
       additionalExpenditures: this.additionalExpendituresHandler.createDefault(),
       salary: this.salaryHandler.createDefault(),
-      rates: this.ratesHandler.create({})
+      rates: this.ratesHandler.create({
+        reducedEnergyConsumption: this.ratesHandler.DEFAULT_REDUCED_ENERGY_CONSUMPTION,
+        discountRate: this.ratesHandler.DEFAULT_DISCOUNT_RATE,
+        annualInflationRate: this.ratesHandler.DEFAULT_ANNUAL_INFLATION_RATE,
+        annualSalaryIndexation: this.ratesHandler.DEFAULT_ANNUAL_SALARY_INDEXATION,
+        annualIncreaseInElectricityTariff: this.ratesHandler.DEFAULT_ANNUAL_INCREASE_IN_ELECTRICITY_TARIFF
+      })
     }
     this.validate(state)
     return state

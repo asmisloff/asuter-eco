@@ -1,4 +1,4 @@
-import { DEFAULT_AND_ACTUAL_VALUES_MISMATCH } from 'economic/const'
+import { DEFAULT_AND_ACTUAL_VALUES_MISMATCH, illegalNumberPrecisionMsg } from 'economic/std-messages'
 import {
   StringState,
   StringStateHandler,
@@ -30,6 +30,12 @@ export class FloatStringStateHandler extends StringStateHandler {
       const n = this.checkIsNumber(tgt)
       if (!isNaN(n)) {
         this.checkInRange(tgt, n, this.minValue, this.maxValue)
+        this.check(
+          tgt,
+          this.numberOfFractionDigits(tgt.value) <= this.precision,
+          Status.Error,
+          illegalNumberPrecisionMsg(this.precision)
+        )
       }
     }
     return tgt.status
@@ -40,12 +46,12 @@ export class FloatStringStateHandler extends StringStateHandler {
     if (isNaN(n)) {
       return s ?? ''
     }
-    return format(n, this.precision)
+    return format(n, 20)
   }
 
   equal(tgt: StringState, value: number | string): boolean {
     if (typeof(value) === 'number') {
-      value = format(value, this.precision, undefined, '')
+      value = format(value, undefined, undefined, '')
     }
     return value === tgt.value
   }
@@ -56,5 +62,13 @@ export class FloatStringStateHandler extends StringStateHandler {
       return false
     }
     return true
+  }
+
+  numberOfFractionDigits(s: string): number {
+    const commaIdx = s.lastIndexOf(',')
+    if (commaIdx < 0) {
+      return 0
+    }
+    return s.length - commaIdx - 1
   }
 }

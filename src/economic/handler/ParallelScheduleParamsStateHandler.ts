@@ -2,7 +2,7 @@ import { StringStateHandler } from 'common/StringStateHandler'
 import { StringStateRecordHandler } from 'common/StringStateRecordHandler'
 import { FloatStringStateHandler } from 'common/number-state-handler/FloatStringStateHandler'
 import { Status } from 'common/verifiable'
-import { DEFAULT_AND_ACTUAL_VALUES_MISMATCH } from 'economic/const'
+import { DEFAULT_AND_ACTUAL_VALUES_MISMATCH } from 'economic/std-messages'
 import { ParallelEconComputationDto } from 'economic/model/dto'
 import { ParallelScheduleParamsKwArgs, ParallelScheduleParamsState } from 'economic/model/parallel-schedule-params'
 
