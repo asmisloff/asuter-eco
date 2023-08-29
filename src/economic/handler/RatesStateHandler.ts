@@ -3,14 +3,18 @@ import { StringStateRecordHandler } from 'common/StringStateRecordHandler'
 import { FloatStringStateHandler } from 'common/number-state-handler/FloatStringStateHandler'
 import { IntStringStateHandler } from 'common/number-state-handler/IntStringStateHandler'
 import { Status } from 'common/verifiable'
-import { RatesState, RatesStateKw } from 'economic/model/rates'
+import { RatesState, RatesStateKwargs } from 'economic/model/rates'
 
-export class RatesStateHandler extends StringStateRecordHandler<RatesState, RatesStateKw> {
+
+/**
+ * Контроллер для управления состоянием раздела "Экономические ставки".
+ */
+export class RatesStateHandler extends StringStateRecordHandler<RatesState, RatesStateKwargs> {
 
     readonly DEFAULT_REDUCED_ENERGY_CONSUMPTION = 0
     readonly DEFAULT_INCOME_TAX = 20.0
     readonly DEFAULT_PROPERTY_TAX = 2.2
-    readonly DEFAULT_UNIFIED_SOCIAL_TAX = 26
+    readonly DEFAULT_SOCIAL_TAX = 26
     readonly DEFAULT_DISCOUNT_RATE = 10.0
     readonly DEFAULT_ANNUAL_INFLATION_RATE = 5.0
     readonly DEFAULT_ANNUAL_SALARY_INDEXATION = 5.0
@@ -23,14 +27,14 @@ export class RatesStateHandler extends StringStateRecordHandler<RatesState, Rate
     private optHandler = new FloatStringStateHandler(0, 50, 2, false)
     private calcPeriodHandler = new IntStringStateHandler(1, 50, true)
 
-    handlers: Record<keyof RatesStateKw, StringStateHandler | ((arg?: any) => any)> = {
+    handlers: Record<keyof RatesStateKwargs, StringStateHandler | ((arg?: any) => any)> = {
         profitRateForCargoTurnover: this.rateHandler,
         spendingRateForEconomicTasks: this.rateHandler,
         reducedEnergyConsumption: this.energyConsumptionHandler,
         electricityCostPerTraction: this.electricityCostHandler,
         incomeTax: this.optHandler,
         propertyTax: this.optHandler,
-        unifiedSocialTax: this.optHandler,
+        socialTax: this.optHandler,
         discountRate: this.reqHandler,
         annualInflationRate: this.reqHandler,
         annualSalaryIndexation: this.reqHandler,
@@ -38,6 +42,7 @@ export class RatesStateHandler extends StringStateRecordHandler<RatesState, Rate
         calculationPeriod: this.calcPeriodHandler
     }
 
+    /** Рассчитать коэффициент дисконтирования (в долях единицы). */
     discountCoefficient(tgt: RatesState): string {
         if (tgt.discountRate.status < Status.Error) {
             const dr = tgt.discountRate.value !== ''

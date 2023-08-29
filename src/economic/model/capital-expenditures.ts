@@ -21,7 +21,7 @@ export interface CapitalExpendituresTableState extends Verifiable {
     rows: CapitalExpendituresRowState[]
 }
 
-export type CapitalExpendituresRowKwArgs = Partial<{
+export type CapitalExpendituresRowKwargs = Partial<{
     equipment: string,
     type: string,
     price: string | number,

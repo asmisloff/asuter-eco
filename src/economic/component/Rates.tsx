@@ -44,10 +44,10 @@ export const RatesView = (props: { rates: taxes.RatesState }) => {
         onBlur={(v: string) => dispatch(economicSlice.actions.updateRates({ propertyTax: v }))}
       />
       <StringStateInput
-        state={props.rates.unifiedSocialTax}
+        state={props.rates.socialTax}
         label='Единый социальный налог, %'
-        placeholder={h.ratesHandler.DEFAULT_UNIFIED_SOCIAL_TAX.toString()}
-        onBlur={(v: string) => dispatch(economicSlice.actions.updateRates({ unifiedSocialTax: v }))}
+        placeholder={h.ratesHandler.DEFAULT_SOCIAL_TAX.toString()}
+        onBlur={(v: string) => dispatch(economicSlice.actions.updateRates({ socialTax: v }))}
       />
       <div style={{ display: 'inline-block' }}>
         <StringStateInput

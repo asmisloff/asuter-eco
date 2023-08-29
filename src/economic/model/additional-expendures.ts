@@ -22,7 +22,7 @@ export interface AdditionalExpendituresTableState extends Verifiable {
     rows: AdditionalExpendituresRowState[]
 }
 
-export type AdditionalExpendituresRowKwArgs = Partial<{
+export type AdditionalExpendituresRowKwargs = Partial<{
     expendureItem: string,
     equipment: string,
     price: string | number,

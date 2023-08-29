@@ -12,7 +12,7 @@ export interface CapacityParamsState extends Verifiable {
   newTrainQty: StringState
 }
 
-export interface CapacityParamsKw {
+export interface CapacityParamsKwargs {
   oldCapacityDto?: CapacityEconComputationDto | null
   newCapacityDto?: CapacityEconComputationDto | null
   maxTrainMass?: string

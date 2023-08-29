@@ -3,11 +3,14 @@ import { StringStateRecordHandler } from 'common/StringStateRecordHandler'
 import { StringStringStateHandler } from 'common/StringStringStateHandler'
 import { FloatStringStateHandler } from 'common/number-state-handler/FloatStringStateHandler'
 import { IntStringStateHandler } from 'common/number-state-handler/IntStringStateHandler'
-import { SalaryStateRow, SalaryStateKw } from 'economic/model/salary'
+import { SalaryStateRow, SalaryStateKwargs } from 'economic/model/salary'
 
-export class SalaryRowStateHandler extends StringStateRecordHandler<SalaryStateRow, SalaryStateKw> {
+/**
+ * Контроллер для управления состоянием раздела "Оплата труда".
+ */
+export class SalaryRowStateHandler extends StringStateRecordHandler<SalaryStateRow, SalaryStateKwargs> {
 
-    handlers: Record<keyof SalaryStateKw, StringStateHandler | ((arg?: any) => any)> = {
+    handlers: Record<keyof SalaryStateKwargs, StringStateHandler | ((arg?: any) => any)> = {
         employee: new StringStringStateHandler(1, 50),
         equipment: new StringStringStateHandler(0, 50),
         qty: new IntStringStateHandler(1, 100, true),

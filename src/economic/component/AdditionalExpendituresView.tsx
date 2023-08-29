@@ -21,8 +21,7 @@ export function AdditionalExpendituresView(props: { tbl: AdditionalExpendituresT
             <th rowSpan={2}>Количество</th>
             <th colSpan={2}>Характер расходов</th>
             <th rowSpan={2}>
-              <button onClick={() => dispatch(economicSlice.actions.insertAdditionalExpendituresRow(0))}
-              >+</button>
+              <button onClick={() => dispatch(economicSlice.actions.insertAdditionalExpendituresRow(0))}>+</button>
             </th>
           </tr>
           <tr>

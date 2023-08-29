@@ -4,11 +4,11 @@ import { StringStateHandler } from 'common/StringStateHandler'
 import { StringStateRecordHandler } from 'common/StringStateRecordHandler'
 import { StringStateTableHandler } from 'common/StringStateTableHandler'
 import { StringStringStateHandler } from 'common/StringStringStateHandler'
-import {CapitalExpendituresRowKwArgs, CapitalExpendituresRowState} from 'economic/model/capital-expenditures'
+import {CapitalExpendituresRowKwargs, CapitalExpendituresRowState} from 'economic/model/capital-expenditures'
 
-class RowHandler extends StringStateRecordHandler<CapitalExpendituresRowState, CapitalExpendituresRowKwArgs> {
+class RowHandler extends StringStateRecordHandler<CapitalExpendituresRowState, CapitalExpendituresRowKwargs> {
 
-    readonly handlers: Record<keyof CapitalExpendituresRowKwArgs, StringStateHandler | ((arg?: any) => any)> = {
+    readonly handlers: Record<keyof CapitalExpendituresRowKwargs, StringStateHandler | ((arg?: any) => any)> = {
         equipment: new StringStringStateHandler(1, 50),
         type: new StringStringStateHandler(0, 50),
         price: new FloatStringStateHandler(1, 100e6, 2, true),
@@ -17,7 +17,10 @@ class RowHandler extends StringStateRecordHandler<CapitalExpendituresRowState, C
     }
 }
 
-export class CapitalExpendituresStateHandler extends StringStateTableHandler<CapitalExpendituresRowState, CapitalExpendituresRowKwArgs> {
+/**
+ * Контроллер для управления состоянием раздела "Капитальные затраты".
+ */
+export class CapitalExpendituresStateHandler extends StringStateTableHandler<CapitalExpendituresRowState, CapitalExpendituresRowKwargs> {
     constructor() {
         super(new RowHandler())
     }

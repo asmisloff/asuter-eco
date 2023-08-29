@@ -4,13 +4,16 @@ import { FloatStringStateHandler } from 'common/number-state-handler/FloatString
 import { Status } from 'common/verifiable'
 import { DEFAULT_AND_ACTUAL_VALUES_MISMATCH } from 'economic/std-messages'
 import { ParallelEconComputationDto } from 'economic/model/dto'
-import { ParallelScheduleParamsKwArgs, ParallelScheduleParamsState } from 'economic/model/parallel-schedule-params'
+import { ParallelScheduleParamsKwargs, ParallelScheduleParamsState } from 'economic/model/parallel-schedule-params'
 
-export class ParallelScheduleParamsStateHandler extends StringStateRecordHandler<ParallelScheduleParamsState, ParallelScheduleParamsKwArgs> {
+/**
+ * Контроллер для управления состоянием раздела "Нагрузочная способность".
+ */
+export class ParallelScheduleParamsStateHandler extends StringStateRecordHandler<ParallelScheduleParamsState, ParallelScheduleParamsKwargs> {
     
     readonly dcHandler = new FloatStringStateHandler(0, 1e6, 3, false)
     
-    handlers: Record<keyof ParallelScheduleParamsKwArgs, StringStateHandler | ((arg?: any) => any)> = {
+    handlers: Record<keyof ParallelScheduleParamsKwargs, StringStateHandler | ((arg?: any) => any)> = {
         oldComputation: (c?: ParallelEconComputationDto) => c === undefined ? null : c,
         newComputation: (c?: ParallelEconComputationDto) => c === undefined ? null : c,
         oldDailyConsumption: this.dcHandler,

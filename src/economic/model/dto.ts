@@ -175,8 +175,8 @@ export interface TaxRates {
     incomeTax: number
     /** Налог на имущество % */
     propertyTax: number
-    /** Единый социальный налог % */
-    unifiedSocialTax: number
+    /** среднегодовая ставка социальных взносов, % */
+    averageAnnualRateOfSocialContributions: number
 }
 
 /** Промежуточный результат вычисления на каждом шаге расчета. */
@@ -239,7 +239,7 @@ export interface InflationRates {
 }
 
 /** Характер расходов. */
-export type ExpenditureType = 
+export type ExpenditureType =
     | 'ONETIME' // Единовременные расходы
     | 'ANNUAL' // Ежегодные расходы
 

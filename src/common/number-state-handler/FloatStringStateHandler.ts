@@ -7,6 +7,9 @@ import {
 } from '.././StringStateHandler'
 import { Status } from '.././verifiable'
 
+/**
+ * Контроллер для управления строковым состоянием, которое хранит представление действительного числа.
+ */
 export class FloatStringStateHandler extends StringStateHandler {
   readonly minValue: number
   readonly maxValue: number
@@ -41,6 +44,7 @@ export class FloatStringStateHandler extends StringStateHandler {
     return tgt.status
   }
 
+  /** Возвращает нормализованное строковое представление числа или пустую строку, если не удалось распознать число. */
   normalized(s?: string): string {
     const n = this.parseNumber(s ?? '')
     if (isNaN(n)) {
@@ -49,6 +53,7 @@ export class FloatStringStateHandler extends StringStateHandler {
     return format(n, 20)
   }
 
+  /** Предикат для проверки равенства с точностью до заданной в поле precision. */
   equal(tgt: StringState, value: number | string): boolean {
     if (typeof(value) === 'number') {
       value = format(value, undefined, undefined, '')
@@ -56,6 +61,11 @@ export class FloatStringStateHandler extends StringStateHandler {
     return value === tgt.value
   }
 
+  /**
+   * Сравнить состояние с заданным значением и добавить предупреждение, если они не равны.
+   * @param tgt целевое состояние.
+   * @param defaultValue заданное значение для сравнения.
+   */
   compareToDefault(tgt: StringState, defaultValue: number | string): boolean {
     if (tgt.value !== '' && !this.equal(tgt, defaultValue)) {
       this.addWarning(tgt, DEFAULT_AND_ACTUAL_VALUES_MISMATCH)
@@ -64,6 +74,7 @@ export class FloatStringStateHandler extends StringStateHandler {
     return true
   }
 
+  /** Количество цифр после десятичного разделителя в строковом представлении действительного числа. */
   numberOfFractionDigits(s: string): number {
     const commaIdx = s.lastIndexOf(',')
     if (commaIdx < 0) {

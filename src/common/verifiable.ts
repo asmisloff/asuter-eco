@@ -67,6 +67,11 @@ export abstract class StateHandler<S extends Verifiable> {
     }
   }
 
+  /**
+   * Передать информацию о статусе верификации из одного объекта в другой.
+   * @param tgt состояние, в которое передается статус.
+   * @param src состояние, из которого передается статус.
+   */
   transferStatus(tgt: Verifiable, src: Verifiable): void {
     tgt.status = Math.max(tgt.status, src.status)
     for (const s of src.what ?? []) {

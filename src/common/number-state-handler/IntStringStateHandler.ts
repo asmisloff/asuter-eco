@@ -1,6 +1,9 @@
 import { NUMERIC_RANGE_VIOLATION } from 'economic/std-messages';
 import { FloatStringStateHandler } from './FloatStringStateHandler';
 
+/**
+ * Контроллер для управления строковым состоянием, которое хранит представление целого числа.
+ */
 export class IntStringStateHandler extends FloatStringStateHandler {
   readonly minValue: number;
   readonly maxValue: number;

@@ -2,6 +2,9 @@ import { StringState, StringStateHandler } from 'common/StringStateHandler'
 import { Status } from 'common/verifiable'
 import { MAX_SYMBOL_QTY } from 'economic/std-messages'
 
+/**
+ * Контроллер для управления строковым состоянием как строкой.
+ */
 export class StringStringStateHandler extends StringStateHandler {
 
     private maxLength: number
@@ -11,10 +14,6 @@ export class StringStringStateHandler extends StringStateHandler {
         super()
         this.maxLength = maxLength
         this.minLength = minLength
-    }
-
-    toDto(state: StringState): string {
-        return state.value
     }
 
     validate(tgt: StringState): Status {
@@ -32,5 +31,4 @@ export class StringStringStateHandler extends StringStateHandler {
             return s.trim()
         }
     }
-
 }

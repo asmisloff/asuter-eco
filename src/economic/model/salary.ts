@@ -13,7 +13,7 @@ export interface SalaryStateRow extends Verifiable {
     motivation: StringState
 }
 
-export interface SalaryStateKw {
+export interface SalaryStateKwargs {
     employee?: string,
     equipment?: string,
     qty?: string | number,

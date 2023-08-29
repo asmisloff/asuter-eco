@@ -21,8 +21,8 @@ export interface RatesState extends Verifiable {
     /** Налог на имущество, % */
     propertyTax: StringState
 
-    /** Единый социальный налог, % */
-    unifiedSocialTax: StringState
+    /** среднегодовая ставка социальных взносов, % */
+    socialTax: StringState
 
     /** Ставка дисконтирования, % */
     discountRate: StringState
@@ -40,14 +40,14 @@ export interface RatesState extends Verifiable {
     calculationPeriod: StringState
 }
 
-export type RatesStateKw = Partial<{
+export type RatesStateKwargs = Partial<{
     profitRateForCargoTurnover: string | number
     spendingRateForEconomicTasks: string | number
     reducedEnergyConsumption: string | number
     electricityCostPerTraction: string | number
     incomeTax: string | number
     propertyTax: string | number
-    unifiedSocialTax: string | number
+    socialTax: string | number
     discountRate: string | number
     annualInflationRate: string | number
     annualSalaryIndexation: string | number
