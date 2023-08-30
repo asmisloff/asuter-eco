@@ -121,7 +121,7 @@ export abstract class StringStateHandler extends StateHandler<StringState> {
 }
 
 export function format(
-    v: string | number | null | undefined,
+    v: string | number /* | Complex */ | null | undefined,
     maxFractionDigits?: number,
     minFractionDigits?: number,
     defaultValue: string = '-',
