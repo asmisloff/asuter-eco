@@ -125,20 +125,41 @@ export function format(
     maxFractionDigits?: number,
     minFractionDigits?: number,
     defaultValue: string = '-',
-    signDisplay: 'auto' | 'always' | 'exceptZero' | 'never' | undefined = 'auto'
+    signDisplay: 'auto' | 'always' | 'exceptZero' | 'never' | undefined = 'auto' // todo: 'negative' по умолчанию, убрать deleteMinusIfNegativeZero
 ): string {
+
+    /**
+     * Удалить знак '-', если в строке-аргументе записан отрицательный ноль.
+     * 
+     *  - TODO (30 авг. 2023 г.):
+     *      Intl.NumberFormat может принимать для параметра signDisplay значение 'negative'.
+     *      Эта опция решает проблему с отрицательным нулем, но она относительно новая и
+     *      слабо поддерживается браузерами.
+     */
+    function deleteMinusIfNegativeZero(s: string): string {
+        if (s.length >= 2 && s[0] === '-' && s[1] === '0') {
+        for (let i = 2; i < s.length; ++i) {
+            if (s[i] >= '1' && s[i] <= '9') {
+            return s
+            }
+        }
+        return s.substring(1, s.length)
+        }
+        return s
+    }
+
     if (v == null) {
         return defaultValue
     }
     const options = { maximumFractionDigits: maxFractionDigits, minimumFractionDigits: minFractionDigits, signDisplay: signDisplay }
     if (typeof v === 'object') { // Complex
         const c = v as { re: number, im: number }
-        const re = c.re.toLocaleString('ru', options)
-        let im = c.im.toLocaleString('ru', options)
+        const re = deleteMinusIfNegativeZero(c.re.toLocaleString('ru', options))
+        let im = deleteMinusIfNegativeZero(c.im.toLocaleString('ru', options))
         if (Math.sign(c.im) >= 0) im = `+${im}`
         return `${re}${im}j`
     }
-    return (+v).toLocaleString('ru', options)
+    return deleteMinusIfNegativeZero((+v).toLocaleString('ru', options))
 }
 
 export function localized(

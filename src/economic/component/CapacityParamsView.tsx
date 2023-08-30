@@ -170,7 +170,7 @@ export function CapacityParamsView(props: { capacity: CapacityParamsState, isTra
       <div>
         <input type="text" name="absPowerDiff" disabled value={trainQtyDiff.abs} />
         <input type="text" name="relPowerDiff" disabled value={trainQtyDiff.rel} />
-        <label htmlFor="relPowerDiff">Изменение в межпоездном интервале</label>
+        <label htmlFor="relPowerDiff">Изменение в количестве поездов</label>
       </div>
 
     </div>
