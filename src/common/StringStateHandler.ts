@@ -125,7 +125,7 @@ export function format(
     maxFractionDigits?: number,
     minFractionDigits?: number,
     defaultValue: string = '-',
-    signDisplay: 'auto' | 'always' | 'exceptZero' | 'never' | undefined = 'auto' // todo: 'negative' по умолчанию, убрать deleteMinusIfNegativeZero
+    signDisplay: 'auto' | 'always' | 'exceptZero' | 'never' | undefined = 'auto'
 ): string {
 
     /**
