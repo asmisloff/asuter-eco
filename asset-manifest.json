@@ -1,17 +1,17 @@
 {
   "files": {
-    "main.js": "/asuter-eco/static/js/main.70178847.chunk.js",
-    "main.js.map": "/asuter-eco/static/js/main.70178847.chunk.js.map",
+    "main.js": "/asuter-eco/static/js/main.97728333.chunk.js",
+    "main.js.map": "/asuter-eco/static/js/main.97728333.chunk.js.map",
     "runtime-main.js": "/asuter-eco/static/js/runtime-main.d0e3c56e.js",
     "runtime-main.js.map": "/asuter-eco/static/js/runtime-main.d0e3c56e.js.map",
-    "static/js/2.cb964bb9.chunk.js": "/asuter-eco/static/js/2.cb964bb9.chunk.js",
-    "static/js/2.cb964bb9.chunk.js.map": "/asuter-eco/static/js/2.cb964bb9.chunk.js.map",
+    "static/js/2.b7197621.chunk.js": "/asuter-eco/static/js/2.b7197621.chunk.js",
+    "static/js/2.b7197621.chunk.js.map": "/asuter-eco/static/js/2.b7197621.chunk.js.map",
     "index.html": "/asuter-eco/index.html",
-    "static/js/2.cb964bb9.chunk.js.LICENSE.txt": "/asuter-eco/static/js/2.cb964bb9.chunk.js.LICENSE.txt"
+    "static/js/2.b7197621.chunk.js.LICENSE.txt": "/asuter-eco/static/js/2.b7197621.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.d0e3c56e.js",
-    "static/js/2.cb964bb9.chunk.js",
-    "static/js/main.70178847.chunk.js"
+    "static/js/2.b7197621.chunk.js",
+    "static/js/main.97728333.chunk.js"
   ]
 }
